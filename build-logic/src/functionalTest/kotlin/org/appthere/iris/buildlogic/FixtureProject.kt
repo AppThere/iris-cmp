@@ -10,12 +10,27 @@ internal class FixtureProject(
     fun withCommonSource(
         fileName: String,
         code: String,
+    ): FixtureProject = withSource("commonMain", fileName, code)
+
+    /** Appends [script] to the fixture module's `build.gradle.kts`. */
+    fun withBuildScript(script: String): FixtureProject {
+        dir.resolve("$MODULE/build.gradle.kts").appendText(script.trimIndent() + "\n")
+        return this
+    }
+
+    fun withSource(
+        sourceSet: String,
+        fileName: String,
+        code: String,
     ): FixtureProject {
-        val file = dir.resolve("$MODULE/src/commonMain/kotlin/$fileName")
+        val file = dir.resolve("$MODULE/src/$sourceSet/kotlin/$fileName")
         file.parentFile.mkdirs()
         file.writeText(code)
         return this
     }
+
+    /** Directory of the fixture module, for assertions on build outputs. */
+    val moduleDir: File get() = dir.resolve(MODULE)
 
     fun runner(vararg tasks: String): GradleRunner =
         GradleRunner
