@@ -8,7 +8,7 @@ Phase 0: Foundations and spikes (in progress)
 ## Done
 - Product spec, architecture, file format, standards, TDD guide, phase plan and decision log written (design only; no code yet).
 - `docs/phases/phase-0.md` approved 2026-10-04; its open questions resolved as D-019 to D-022.
-- Git repository initialized (branch `main`), pushed to private GitHub repo `AppThere/iris-cmp`.
+- Git repository initialized (branch `main`), pushed to public GitHub repo `AppThere/iris-cmp`; commits use the GitHub noreply email (repo-local git config).
 - Available hardware recorded in `docs/hardware-matrix.md`: Galaxy Tab S10 Lite with S Pen, MacBook Air M1, Linux/Wayland dev machine.
 
 ## Next

@@ -13,7 +13,7 @@ Written: 2026-10-04. Source: `docs/phase-plan.md` Phase 0; rules from `CLAUDE.md
 | Caches | Gradle 9.1.0 distribution, Kotlin/Native 2.4.10 prebuilt | These are hints only. A1 still checks the current stable versions |
 | macOS / Xcode | none here; Kevin has a MacBook Air M1 | iOS and macOS evidence comes from that Mac (Kevin runs the steps) or macOS CI |
 | Stylus | none on this machine; Galaxy Tab S10 Lite with S Pen available | S9: Android/S Pen evidence only. S3 and other OSes: partial per D-022 |
-| Git | repository on `main`, remote `AppThere/iris-cmp` (private) | CI (A8) runs on GitHub Actions |
+| Git | repository on `main`, remote `AppThere/iris-cmp` (public) | CI (A8) runs on GitHub Actions |
 
 ## 1. Order of work
 
