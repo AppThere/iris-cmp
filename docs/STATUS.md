@@ -11,9 +11,16 @@ Phase 0: Foundations and spikes (in progress)
 - Git repository initialized (branch `main`), pushed to public GitHub repo `AppThere/iris-cmp`; commits use the GitHub noreply email (repo-local git config).
 - Available hardware recorded in `docs/hardware-matrix.md`: Galaxy Tab S10 Lite with S Pen, MacBook Air M1, Linux/Wayland dev machine.
 
+- A0 done: `LICENSE` (canonical Apache-2.0 text), `NOTICE`, `.gitignore`, `.gitattributes`, `.editorconfig`, Gradle 9.7.0 wrapper with distribution checksum, `settings.gradle.kts` including `build-logic`. `./gradlew help` passes on JDK 25.
+- A1 research done: proposed versions and licenses in `docs/dependencies.md` (checked 2026-10-04).
+
 ## Next
-1. A0: repo bootstrap (`.gitignore`, `.editorconfig`, `LICENSE`, `NOTICE`, Gradle wrapper, settings with `build-logic`).
-2. A1: look up current stable versions; Kevin approves the dependency list before it is added.
+1. Kevin approves the A1 list in `docs/dependencies.md`, including the detekt 2.0.0-alpha.6 choice.
+2. Then: pin versions in `gradle/libs.versions.toml`, start A2 (convention plugins, `ExplicitApiConventionTest` first).
+
+## Notes
+- services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
+- Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
 
 ## Unverified (could not be tested on the available machine)
 - iOS and macOS: no macOS on the development machine. Evidence comes from Kevin's MacBook Air M1 or macOS CI.
