@@ -11,9 +11,9 @@ Written: 2026-10-04. Source: `docs/phase-plan.md` Phase 0; rules from `CLAUDE.md
 | JDK | OpenJDK 25.0.3 | Check Gradle/AGP/Kotlin support for JDK 25 in A1. If any of them lacks it, use a toolchain JDK |
 | Android SDK | platforms 36 and 37, one emulator image (API 36, google_apis) | S1 needs API 28 and API 33+ images, which are not installed yet |
 | Caches | Gradle 9.1.0 distribution, Kotlin/Native 2.4.10 prebuilt | These are hints only. A1 still checks the current stable versions |
-| macOS / Xcode | none | iOS cannot be linked, run or tested here; iOS evidence must come from CI or a Mac |
-| Stylus | none detected in `/proc/bus/input/devices` | S3 and S9 need a tablet attached to this machine or other devices |
-| Git | the directory is not a repository | A0 creates it; CI (A8) needs a remote |
+| macOS / Xcode | none here; Kevin has a MacBook Air M1 | iOS and macOS evidence comes from that Mac (Kevin runs the steps) or macOS CI |
+| Stylus | none on this machine; Galaxy Tab S10 Lite with S Pen available | S9: Android/S Pen evidence only. S3 and other OSes: partial per D-022 |
+| Git | repository on `main`, remote `AppThere/iris-cmp` (private) | CI (A8) runs on GitHub Actions |
 
 ## 1. Order of work
 
