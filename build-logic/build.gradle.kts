@@ -1,0 +1,51 @@
+plugins {
+    `kotlin-dsl`
+}
+
+group = "org.appthere.iris.buildlogic"
+
+// TestKit tests that build small fixture projects with the convention plugins applied.
+val functionalTest: SourceSet by sourceSets.creating
+
+gradlePlugin {
+    testSourceSets(functionalTest)
+    plugins {
+        register("kmpLibrary") {
+            id = "iris.kmp.library"
+            implementationClass = "org.appthere.iris.buildlogic.KmpLibraryConventionPlugin"
+        }
+    }
+}
+
+configurations[functionalTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[functionalTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly.get())
+
+dependencies {
+    implementation(libs.gradlePlugin.kotlin)
+    implementation(libs.gradlePlugin.android)
+
+    testImplementation(kotlin("test-junit5"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    "functionalTestImplementation"(gradleTestKit())
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
+val functionalTestTask =
+    tasks.register<Test>("functionalTest") {
+        description = "Runs TestKit tests against fixture projects."
+        group = "verification"
+        testClassesDirs = functionalTest.output.classesDirs
+        classpath = functionalTest.runtimeClasspath
+        // Fixtures read the real catalog, so the tests check the versions we ship with.
+        systemProperty("iris.versionCatalog", layout.projectDirectory.file("../gradle/libs.versions.toml").asFile.absolutePath)
+        // Share the user's Gradle home so fixtures do not re-download every dependency.
+        systemProperty("iris.testKitDir", gradle.gradleUserHomeDir.absolutePath)
+        shouldRunAfter(tasks.test)
+    }
+
+tasks.check {
+    dependsOn(functionalTestTask)
+}

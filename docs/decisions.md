@@ -26,6 +26,7 @@ Append new entries at the bottom. Each entry: id, date, status (`accepted`, `pro
 | D-020 | 2026-10-04 | accepted | `licenseCheck` allow-list: Apache-2.0, MIT, BSD-2-Clause, BSD-3-Clause, ISC, Zlib for shipped code; EPL-1.0/2.0 allowed in test-only configurations | Apache-compatible licenses only in the app (D-002); common test tools such as JUnit are EPL |
 | D-021 | 2026-10-04 | accepted | Experimental Kotlin stdlib APIs (for example `kotlin.uuid.Uuid`) may be used if each opt-in sits at a single wrapper site with a comment | Avoids a third-party UUID dependency; keeps the experimental surface in one place |
 | D-022 | 2026-10-04 | accepted | Gate 1 accepts a documented partial result for spikes S3 and S9 when pen hardware is not available; completion carries into Phase 3 and is tracked in `STATUS.md` | Stylus hardware may not be available during Phase 0; Phase 3 (painting) is where adapters are built |
+| D-023 | 2026-10-04 | accepted | Static analysis uses detekt 2.0.0-alpha.6, pinned; `DetektLimitsFixtureTest` guards rule behavior on upgrade. Revisit when detekt 2.0.0 is stable | The stable detekt 1.23.8 does not support Kotlin 2.4 or Gradle 9; 2.0 alphas are built against our stack |
 
 ## Provisional items and placeholders
 

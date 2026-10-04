@@ -1,0 +1,59 @@
+package org.appthere.iris.buildlogic
+
+import org.gradle.testkit.runner.GradleRunner
+import java.io.File
+
+/** A throwaway Gradle build in [dir] with one `iris.kmp.library` module, for TestKit tests. */
+internal class FixtureProject(
+    private val dir: File,
+) {
+    fun withCommonSource(
+        fileName: String,
+        code: String,
+    ): FixtureProject {
+        val file = dir.resolve("$MODULE/src/commonMain/kotlin/$fileName")
+        file.parentFile.mkdirs()
+        file.writeText(code)
+        return this
+    }
+
+    fun runner(vararg tasks: String): GradleRunner =
+        GradleRunner
+            .create()
+            .withProjectDir(dir)
+            .withPluginClasspath()
+            .withTestKitDir(File(requiredProperty("iris.testKitDir")))
+            .withArguments(*tasks, "--stacktrace")
+            .forwardOutput()
+
+    companion object {
+        const val MODULE = "iris-fixture"
+
+        fun kmpLibrary(dir: File): FixtureProject {
+            val catalog = File(requiredProperty("iris.versionCatalog")).invariantSeparatorsPath
+            dir.resolve("settings.gradle.kts").writeText(
+                """
+                dependencyResolutionManagement {
+                    repositories {
+                        google()
+                        mavenCentral()
+                    }
+                    versionCatalogs {
+                        create("libs") { from(files("$catalog")) }
+                    }
+                }
+                rootProject.name = "fixture"
+                include(":$MODULE")
+                """.trimIndent(),
+            )
+            dir.resolve("gradle.properties").writeText("org.gradle.jvmargs=-Xmx2g\n")
+            val module = dir.resolve(MODULE)
+            module.mkdirs()
+            module.resolve("build.gradle.kts").writeText("plugins { id(\"iris.kmp.library\") }\n")
+            return FixtureProject(dir)
+        }
+
+        private fun requiredProperty(name: String): String =
+            requireNotNull(System.getProperty(name)) { "System property $name is not set by the functionalTest task" }
+    }
+}
