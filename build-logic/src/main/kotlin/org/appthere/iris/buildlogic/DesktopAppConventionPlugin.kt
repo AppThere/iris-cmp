@@ -2,15 +2,11 @@ package org.appthere.iris.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.compose.desktop.DesktopExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 /**
  * Convention for the desktop app shell: a Kotlin/JVM Compose desktop application for the build host.
@@ -18,23 +14,10 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
  */
 class DesktopAppConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.pluginManager.apply("org.jetbrains.kotlin.jvm")
+        target.applyIrisKotlinJvm()
         target.pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
         target.pluginManager.apply("org.jetbrains.compose")
         target.pluginManager.apply(QualityConventionPlugin::class.java)
-        target.extensions.configure<KotlinJvmProjectExtension> {
-            compilerOptions {
-                allWarningsAsErrors.set(true)
-                jvmTarget.set(IRIS_JVM_TARGET)
-            }
-        }
-        target.extensions.configure<JavaPluginExtension> {
-            sourceCompatibility = IRIS_JAVA_VERSION
-            targetCompatibility = IRIS_JAVA_VERSION
-        }
-        target.tasks.withType<JavaCompile>().configureEach {
-            options.release.set(IRIS_JAVA_VERSION.majorVersion.toInt())
-        }
         val composeVersion = target.irisCatalog.version("compose-multiplatform")
         val artifact = composeDesktopArtifact(System.getProperty("os.name"), System.getProperty("os.arch"))
         target.dependencies {
