@@ -21,6 +21,21 @@ class QualityConventionTest {
     }
 
     @Test
+    fun `composable functions may use PascalCase names, other functions may not`() {
+        val composable =
+            FixtureProject.kmpCompose(dir).withCommonSource(
+                "Greeting.kt",
+                "import androidx.compose.runtime.Composable\n\n@Composable\npublic fun Greeting(): Unit = Unit\n",
+            )
+
+        composable.runner("$module:spotlessCheck", "$module:detekt", "$module:detektMainJvm").build()
+        composable.withCommonSource("Plain.kt", "public fun Plain(): Int = 1\n")
+        val plain = composable.runner("$module:detekt").buildAndFail()
+
+        assertContains(plain.output, "FunctionNaming")
+    }
+
+    @Test
     fun `detekt reports a code smell`() {
         val project = FixtureProject.kmpLibrary(dir).withCommonSource("Nothing.kt", "public fun nothing() {}\n")
 
