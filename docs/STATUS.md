@@ -31,8 +31,8 @@ Phase 0: Foundations and spikes (in progress)
 ## Next
 1. A8: GitHub Actions (Linux `check`; Windows and macOS JVM tests; Android emulator; iOS simulator on macOS).
 2. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
-2. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
-3. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
+3. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
+4. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
 
 ## Notes
 - A clean first `./gradlew check` with all modules took 41 min, mostly downloading Android Lint 32.3.1. Warm runs take under a minute. CI (A8) should cache `~/.gradle/caches` as well as `~/.konan`.
