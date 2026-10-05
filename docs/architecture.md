@@ -13,7 +13,7 @@ Arrows point from a module to what it may depend on. Nothing may depend upward o
 | `iris-color` | Color spaces, transforms, ICC subset, blend math, gamut mapping | core, pixels | no |
 | `iris-vector` | Path model, stroking, booleans, gradients, shape library, text layout interface | core | no |
 | `iris-exr` | OpenEXR reader/writer | core, pixels | no |
-| `iris-opc` | OPC package reader/writer, ZIP, relationships, content types | core | no |
+| `iris-opc` | OPC package reader/writer, ZIP, relationships, content types. Package `org.appthere.opc`, kept free of Iris types so it can become a shared library (D-027) | none | no |
 | `iris-svg` | SVG reader/writer with `iris:` extensions | core, vector, color | no |
 | `iris-model` | Document, layers, effects, selections, `Command`, `Change` | core, pixels, color, vector | no |
 | `iris-io` | `.iris` reader/writer, import/export codecs, import reports | model, exr, opc, svg | no |

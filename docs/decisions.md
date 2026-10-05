@@ -30,6 +30,7 @@ Append new entries at the bottom. Each entry: id, date, status (`accepted`, `pro
 | D-024 | 2026-10-04 | superseded by D-026 | Minimum iOS (and iPadOS) version is 14.0 (Kevin). Pinned as `ios-minVersion` in `libs.versions.toml`; every Kotlin/Native iOS binary gets `-Xoverride-konan-properties=minVersion.ios=14.0` because the Kotlin/Native 2.4.20 default is 15.0. Completes the iOS part of D-004 | Compose Multiplatform 1.12.1 supports iOS 14; the override is documented by Kotlin (native-target-support). Linking and the resulting Mach-O minimum need macOS to verify |
 | D-025 | 2026-10-05 | accepted | Android compileSdk is 37 (was 36; Kevin). min SDK stays 28 (D-004) and target SDK stays 36 | Compose Multiplatform 1.12.1's Android artifacts (`androidx.compose.runtime:runtime-saveable-android:1.12.1`) fail AGP's AAR metadata check below 37. AGP 9.3.1 recommends compileSdk up to 37.1 |
 | D-026 | 2026-10-05 | accepted | Minimum iOS (and iPadOS) version is 15.0 (Kevin), replacing D-024. `ios-minVersion` stays pinned explicitly on every Kotlin/Native binary. CI's minos check fails if any object needs a newer iOS than 15.0, except archive members listed in `.github/scripts/minos-exempt.txt` (Skiko's code-free ICU data blob, minos 18.5). Older objects are fine (Skiko's prebuilt Skia objects are 14.0) | The first iOS app build (CI run 37316725553) showed Kotlin/Native's prebuilt platform-library caches at minos 15.0 in debug builds, so an iOS 14 debug app linked 15.0 objects. 15.0 is the Kotlin/Native 2.4.20 default; Compose Multiplatform 1.12.1 supports it. Xcode 26 ships no iOS 14 or 15 simulator, so the oldest supported runtime is not exercised in CI |
+| D-027 | 2026-10-05 | accepted | The OPC layer is built in this repository as `iris-opc`, ready to be extracted into a library shared with the planned KMP Office library: package `org.appthere.opc`, no dependency on any Iris module, no Iris URIs or relationship types (those live in `iris-io`), its own error and result types (mapped to `IrisError` in `iris-io`). Resolves P-003 | Spike S12 (`docs/spikes/S12-shared-opc.md`): Iris and OOXML need nearly the same OPC core; the Office library does not exist yet, so building it here lets the API settle against Iris's tests first, and extraction becomes a move rather than a rewrite |
 
 ## Provisional items and placeholders
 
@@ -37,7 +38,7 @@ Append new entries at the bottom. Each entry: id, date, status (`accepted`, `pro
 | --- | --- | --- |
 | P-001 | Package root `org.appthere.iris`, and the namespace/relationship URIs in `docs/file-format.md` (`appthere.org`, `urn:appthere:iris:1`) are placeholders. Confirm real domain/URN before first public release. All URIs are centralized in `IrisUris` | Before Phase 6 |
 | P-002 | iOS and macOS minimum versions | Phase 0 (S1, S2, S9 results) |
-| P-003 | Whether `iris-opc` is shared with the planned KMP Office library (OOXML also uses OPC) | Spike S12, Phase 0 |
+| P-003 | Whether `iris-opc` is shared with the planned KMP Office library (OOXML also uses OPC) | Resolved by D-027 (2026-10-05) |
 | P-004 | EXR compression default (ZIP, ZIPS, PIZ) and chunk size | Spike S10, Phase 0 |
 | P-005 | Windowing route for native Wayland on JVM | Spike S3, Phase 0 |
 | P-006 | Persistent collections library | Spike S8, Phase 0 |

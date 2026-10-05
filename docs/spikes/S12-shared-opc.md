@@ -2,7 +2,7 @@
 
 Question (`docs/phase-plan.md`, P-003): should `iris-opc` be the same library as the OPC layer of the planned KMP Office library?
 
-Status: report and interface sketch done 2026-10-05. **Decision pending (Kevin).** No repositories were created or merged.
+Status: done 2026-10-05. **Decided: option B (D-027).** The KMP Office library does not exist yet, so there was no existing OPC layer to compare. No repositories were created or merged.
 
 ## 1. What each side needs from OPC
 
