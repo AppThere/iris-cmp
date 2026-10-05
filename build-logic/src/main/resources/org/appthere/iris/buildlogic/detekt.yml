@@ -1,0 +1,21 @@
+# Iris overrides on top of detekt's default config (buildUponDefaultConfig).
+# Limits from docs/coding-standards.md section 2; DetektLimitsFixtureTest pins each one.
+complexity:
+  LongMethod:
+    allowedLines: 50
+  CyclomaticComplexMethod:
+    allowedComplexity: 12
+  NestedBlockDepth:
+    allowedDepth: 4
+  LongParameterList:
+    allowedFunctionParameters: 7
+    allowedConstructorParameters: 7
+  # "Public members per class: 20". detekt counts functions only, so public properties are not limited.
+  TooManyFunctions:
+    allowedFunctionsPerFile: 20
+    allowedFunctionsPerClass: 20
+    allowedFunctionsPerInterface: 20
+    allowedFunctionsPerObject: 20
+    allowedFunctionsPerEnum: 20
+    ignorePrivate: true
+    ignoreInternal: true
