@@ -34,12 +34,13 @@ Phase 0: Foundations and spikes (in progress)
 - **Part A complete.**
 
 ## Next
-1. Part B, spikes, in the order of `docs/phases/phase-0.md` section 2: S12 (shared OPC), then S4 (Deflate and ZIP64).
-2. Kevin: `architecture.md` §16 says `sealed interface IrisError`. A sealed type in `iris-core` cannot be extended by other modules, so `IrisError` is an open interface and each module defines a sealed hierarchy implementing it. Approve updating §16 to say so?
-3. Kevin: the 85% line-coverage floor for engine modules (`docs/dependencies.md`, Kover row) is not enforced yet. Add a Kover verification rule to `iris.kmp.library` for engine modules?
-4. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
-5. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
-6. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
+1. Kevin: S12 decision (P-003). Report: `docs/spikes/S12-shared-opc.md`; recommendation B (build `iris-opc` here, extraction-ready: package `org.appthere.opc`, no Iris dependencies, own error types).
+2. S4 (Deflate and ZIP64), then the rest of Part B in the order of `docs/phases/phase-0.md` section 2.
+3. Kevin: `architecture.md` §16 says `sealed interface IrisError`. A sealed type in `iris-core` cannot be extended by other modules, so `IrisError` is an open interface and each module defines a sealed hierarchy implementing it. Approve updating §16 to say so?
+4. Kevin: the 85% line-coverage floor for engine modules (`docs/dependencies.md`, Kover row) is not enforced yet. Add a Kover verification rule to `iris.kmp.library` for engine modules?
+5. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
+6. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
+7. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
 
 ## Notes
 - CI flake seen once (run 37326053534): the emulator job's system image download failed ("Premature EOF"); a rerun passed. If it recurs, cache the system image/AVD in the emulator job.
