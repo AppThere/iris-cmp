@@ -9,4 +9,9 @@ Fixtures, golden harness, stroke replay, fakes.
 
 ## Public entry points
 
-None yet.
+- `assertClose` (Double and Float; absolute and/or ulp tolerance; NaN and infinities exact).
+- `FakeClock`, `FakeDispatcherProvider` (one virtual-time `StandardTestDispatcher`; pass `dispatcher` to `runTest`), `RecordingLogger`.
+- Golden harness: `GoldenImage` (read interface, no pixel copies), `compareGoldenImages`, `goldenDiff`, `GoldenTolerance`, `assertGolden`, `GoldenStore`, `GoldenCodec`; `FileGoldenStore` on the JVM writes `build/golden-candidates/` and `build/golden-failures/<name>/` (docs/testing-tdd.md section 4).
+- `ScriptedStylusSource` for `StylusInputSource` consumers.
+
+Use from other modules' test source sets only.

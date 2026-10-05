@@ -9,4 +9,7 @@
 
 ## Public entry points
 
-None yet.
+- `StylusInputSource`, `StylusCapabilities` (docs/architecture.md section 14).
+- `RawPenEvent`, `PenAction`, `PenTool`, `PenAxes` (which optional axes are present). Minimal Phase 0 shape; Phase 3 extends it (buttons, normalizer, predictor).
+
+Depends on `kotlinx-coroutines-core` (API, for `Flow`).
