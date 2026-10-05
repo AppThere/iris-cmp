@@ -28,7 +28,10 @@ class QualityConventionPlugin : Plugin<Project> {
         target.extensions.configure<SpotlessExtension> {
             kotlin {
                 target("src/**/*.kt")
-                ktlint(ktlintVersion)
+                // Composables are named like types (Compose convention); every other function stays camelCase.
+                ktlint(ktlintVersion).editorConfigOverride(
+                    mapOf("ktlint_function_naming_ignore_when_annotated_with" to "Composable"),
+                )
             }
             kotlinGradle {
                 target("*.gradle.kts")

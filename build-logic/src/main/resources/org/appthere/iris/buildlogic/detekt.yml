@@ -19,3 +19,8 @@ complexity:
     allowedFunctionsPerEnum: 20
     ignorePrivate: true
     ignoreInternal: true
+
+naming:
+  # Composables are named like types (Compose convention); every other function stays camelCase.
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
