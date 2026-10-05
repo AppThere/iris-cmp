@@ -3,7 +3,7 @@ package org.appthere.iris.buildlogic
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File
 
-/** A throwaway Gradle build in [dir] with one `iris.kmp.library` module, for TestKit tests. */
+/** A throwaway Gradle build in [dir] with one module using an Iris convention plugin, for TestKit tests. */
 internal class FixtureProject(
     private val dir: File,
 ) {
@@ -44,7 +44,14 @@ internal class FixtureProject(
     companion object {
         const val MODULE = "iris-fixture"
 
-        fun kmpLibrary(dir: File): FixtureProject {
+        fun kmpLibrary(dir: File): FixtureProject = withPlugin(dir, "iris.kmp.library")
+
+        fun kmpCompose(dir: File): FixtureProject = withPlugin(dir, "iris.kmp.compose")
+
+        private fun withPlugin(
+            dir: File,
+            pluginId: String,
+        ): FixtureProject {
             val catalog = File(requiredProperty("iris.versionCatalog")).invariantSeparatorsPath
             dir.resolve("settings.gradle.kts").writeText(
                 """
@@ -64,7 +71,7 @@ internal class FixtureProject(
             dir.resolve("gradle.properties").writeText("org.gradle.jvmargs=-Xmx2g\n")
             val module = dir.resolve(MODULE)
             module.mkdirs()
-            module.resolve("build.gradle.kts").writeText("plugins { id(\"iris.kmp.library\") }\n")
+            module.resolve("build.gradle.kts").writeText("plugins { id(\"$pluginId\") }\n")
             return FixtureProject(dir)
         }
 
