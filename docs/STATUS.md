@@ -13,12 +13,13 @@ Phase 0: Foundations and spikes (in progress)
 
 - A0 done: `LICENSE` (canonical Apache-2.0 text), `NOTICE`, `.gitignore`, `.gitattributes`, `.editorconfig`, Gradle 9.7.0 wrapper with distribution checksum, `settings.gradle.kts` including `build-logic`. `./gradlew help` passes on JDK 25.
 - A1 done: versions approved and pinned in `gradle/libs.versions.toml`, licenses in `docs/dependencies.md` (checked 2026-10-04), D-023 (detekt 2.0 alpha).
-- A2 in progress. `build-logic` has a TestKit `functionalTest` suite run by root `./gradlew check` (10 tests, green).
+- A2 in progress. `build-logic` has a TestKit `functionalTest` suite run by root `./gradlew check` (11 tests, green).
   - `iris.kmp.library`: JVM, Android (min SDK 28), `iosArm64`, `iosSimulatorArm64`, `explicitApi()`, JVM 17 bytecode, warnings as errors, kotlin-test in commonTest.
   - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
+  - `iris.kmp.compose`: `iris.kmp.library` plus the Compose compiler plugin and the Compose runtime in `commonMain`. Verified on JVM and Android; not the `org.jetbrains.compose` plugin (left for the app conventions, which need packaging and resources).
 
 ## Next
-1. A2, remaining: `iris.kmp.compose`, `iris.app.desktop`, `iris.app.android`, `iris.app.ios` (test first for each).
+1. A2, remaining: `iris.app.desktop`, `iris.app.android`, `iris.app.ios` (test first for each).
 2. A2: check whether iOS klibs cross-compile on Linux (phase-0 §4 item 5). So far the iOS targets are only declared; nothing has compiled them.
 
 ## Notes
