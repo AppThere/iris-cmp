@@ -48,6 +48,18 @@ class FractionalIndexTest {
     }
 
     @Test
+    fun aMidpointThatIsAlsoAPrefixIsExtendedUntilItIsNot() {
+        // Found by FractionalIndexProperties: "a2" + midpoint "001" is still a prefix of the upper bound,
+        // so the site tail "0001" would reproduce it exactly.
+        val low = FractionalIndex.parseOrNull("a1")!!
+        val high = FractionalIndex.parseOrNull("a20010001")!!
+
+        val middle = FractionalIndex.between(low, high, SiteId(0))
+
+        assertTrue(low < middle && middle < high, "$low < $middle < $high")
+    }
+
+    @Test
     fun distinctSitesNeverCollideInTheSameGap() {
         val low = FractionalIndex.parseOrNull("a0")!!
         val high = FractionalIndex.parseOrNull("a1")!!
