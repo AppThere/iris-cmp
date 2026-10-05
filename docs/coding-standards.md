@@ -6,7 +6,7 @@ Applies to all Kotlin in this repository. Tooling enforces what it can; reviews 
 
 - Kotlin official code style. Formatting by Spotless with ktlint **[CI]**; static analysis by detekt with the repository config **[CI]**.
 - Names: types `PascalCase`, functions and properties `camelCase`, constants `SCREAMING_SNAKE_CASE`, packages lowercase. Test names are backtick sentences: `` `stroke with zero pressure paints nothing` ``.
-- Package root `org.appthere.iris.<module>` (placeholder; see `docs/decisions.md`). One top-level public type per file unless the types are a closed set (sealed hierarchy members, small value types).
+- Package root `org.appthere.iris.<module>` (placeholder; see `docs/decisions.md`). Exception: `iris-opc` uses `org.appthere.opc` (D-027). One top-level public type per file unless the types are a closed set (sealed hierarchy members, small value types).
 - No wildcard imports. No `typealias` to hide a primitive meaning; use a value class instead.
 - Prefer expression bodies for one-liners and named arguments when a call has more than three arguments or any boolean argument.
 
