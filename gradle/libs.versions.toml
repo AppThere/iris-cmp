@@ -14,7 +14,7 @@ kover = "0.9.11"
 kotest = "6.2.5"
 
 # Android SDK levels (D-004: minimum Android 9 = API 28)
-android-compileSdk = "36"
+android-compileSdk = "37"
 android-minSdk = "28"
 android-targetSdk = "36"
 
