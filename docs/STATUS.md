@@ -13,16 +13,18 @@ Phase 0: Foundations and spikes (in progress)
 
 - A0 done: `LICENSE` (canonical Apache-2.0 text), `NOTICE`, `.gitignore`, `.gitattributes`, `.editorconfig`, Gradle 9.7.0 wrapper with distribution checksum, `settings.gradle.kts` including `build-logic`. `./gradlew help` passes on JDK 25.
 - A1 done: versions approved and pinned in `gradle/libs.versions.toml`, licenses in `docs/dependencies.md` (checked 2026-10-04), D-023 (detekt 2.0 alpha).
-- A2 in progress. `build-logic` has unit tests (`test`) and TestKit fixture tests (`functionalTest`), both run by root `./gradlew check`.
+- A2 done. `build-logic` has unit tests (`test`) and TestKit fixture tests (`functionalTest`), both run by root `./gradlew check`.
   - `iris.kmp.library`: JVM, Android (min SDK 28), `iosArm64`, `iosSimulatorArm64`, `explicitApi()`, JVM 17 bytecode, warnings as errors, kotlin-test in commonTest.
   - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
   - `iris.kmp.compose`: `iris.kmp.library` plus the Compose compiler plugin and the Compose runtime in `commonMain`. Verified on JVM and Android; not the `org.jetbrains.compose` plugin (left for the app conventions, which need packaging and resources).
   - `iris.app.desktop`: Kotlin/JVM app with the Compose compiler, the `org.jetbrains.compose` plugin and the Compose desktop runtime for the build host; main class `MainKt` in the module's package. Packaging formats are not configured yet. A desktop build only bundles the host's native Skiko, so each OS is packaged on its own runner (A8).
   - iOS on Linux answered (phase-0 §4 item 5; `IosOnLinuxTest`): Kotlin/Native 2.4.20 compiles `iosArm64` and `iosSimulatorArm64` klibs on Linux with no opt-in flag. That covers main and test sources, Foundation/UIKit calls and composables. A type error in `iosMain` fails the build here. Linking and `iosSimulatorArm64Test` are SKIPPED (not failed), so a green Linux build has not run any iOS test.
   - `iris.app.android`: AGP application with built-in Kotlin (AGP 9 fails if `org.jetbrains.kotlin.android` is applied), the Compose compiler and `activity-compose`. `applicationId` is the package root `org.appthere.iris` (placeholder, P-001); min SDK 28, target and compile SDK 36. The app module supplies its own manifest. Signing, versionCode and release builds are not configured yet.
+  - `iris.app.ios`: Kotlin Multiplatform with only `iosArm64` and `iosSimulatorArm64`, each with a static `IrisApp` framework (debug and release) for Xcode's `embedAndSignAppleFrameworkForXcode`; Compose compiler, runtime and UI. Minimum iOS version left at the Kotlin/Native default until D-004 sets one. The Xcode project comes with A11.
 
 ## Next
-1. A2, remaining: `iris.app.ios` (test first).
+1. A3: empty module skeletons for every module in `architecture.md` §1.
+2. Kevin: set the iOS minimum version (D-004 says Phase 0) before A11 adds the Xcode project.
 
 ## Notes
 - First Kotlin/Native use downloads the 2.4.20 distribution into `~/.konan` (~300 MB; 21 min on this connection). CI (A8) should cache `~/.konan`.
@@ -32,7 +34,7 @@ Phase 0: Foundations and spikes (in progress)
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
 
 ## Unverified (could not be tested on the available machine)
-- iOS linking, frameworks and running iOS tests: compile-only on Linux. Needs macOS CI or Kevin's Mac.
+- iOS linking, frameworks (`iris.app.ios` framework link tasks are SKIPPED here) and running iOS tests: compile-only on Linux. Needs macOS CI or Kevin's Mac.
 - iOS and macOS: no macOS on the development machine. Evidence comes from Kevin's MacBook Air M1 or macOS CI.
 - No iPad available: iPadOS Apple Pencil input (S9) is unverified.
 - No pen on Windows, macOS or Linux: those parts of S3 and S9 are partial (D-022).
