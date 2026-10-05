@@ -14,6 +14,10 @@ gradlePlugin {
             id = "iris.kmp.library"
             implementationClass = "org.appthere.iris.buildlogic.KmpLibraryConventionPlugin"
         }
+        register("kmpCompose") {
+            id = "iris.kmp.compose"
+            implementationClass = "org.appthere.iris.buildlogic.KmpComposeConventionPlugin"
+        }
         register("quality") {
             id = "iris.quality"
             implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"
@@ -27,6 +31,7 @@ configurations[functionalTest.runtimeOnlyConfigurationName].extendsFrom(configur
 dependencies {
     implementation(libs.gradlePlugin.kotlin)
     implementation(libs.gradlePlugin.android)
+    implementation(libs.gradlePlugin.composeCompiler)
     implementation(libs.gradlePlugin.detekt)
     implementation(libs.gradlePlugin.spotless)
     implementation(libs.gradlePlugin.kover)
