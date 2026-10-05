@@ -4,20 +4,12 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 import dev.detekt.gradle.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
 
 /** Formatting (Spotless with ktlint), static analysis (detekt) and coverage (Kover), all wired into `check`. */
 class QualityConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        val ktlintVersion =
-            target.extensions
-                .getByType<VersionCatalogsExtension>()
-                .named("libs")
-                .findVersion("ktlint")
-                .orElseThrow { IllegalStateException("Version 'ktlint' is missing from libs.versions.toml") }
-                .requiredVersion
+        val ktlintVersion = target.irisCatalog.version("ktlint")
 
         target.pluginManager.apply("com.diffplug.spotless")
         target.extensions.configure<SpotlessExtension> {

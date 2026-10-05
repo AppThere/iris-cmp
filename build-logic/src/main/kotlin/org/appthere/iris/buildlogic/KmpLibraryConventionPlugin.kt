@@ -3,10 +3,7 @@ package org.appthere.iris.buildlogic
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalog
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -16,7 +13,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
         target.pluginManager.apply("org.jetbrains.kotlin.multiplatform")
         target.pluginManager.apply("com.android.kotlin.multiplatform.library")
         target.pluginManager.apply(QualityConventionPlugin::class.java)
-        val catalog = target.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        val catalog = target.irisCatalog
         target.extensions.configure<KotlinMultiplatformExtension> {
             explicitApi()
             compilerOptions {
@@ -39,10 +36,4 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             }
         }
     }
-
-    private fun VersionCatalog.intVersion(alias: String): Int =
-        findVersion(alias)
-            .orElseThrow { IllegalStateException("Version '$alias' is missing from libs.versions.toml") }
-            .requiredVersion
-            .toInt()
 }

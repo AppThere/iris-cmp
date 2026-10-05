@@ -2,7 +2,6 @@ package org.appthere.iris.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.configure
@@ -36,13 +35,7 @@ class DesktopAppConventionPlugin : Plugin<Project> {
         target.tasks.withType<JavaCompile>().configureEach {
             options.release.set(IRIS_JAVA_VERSION.majorVersion.toInt())
         }
-        val composeVersion =
-            target.extensions
-                .getByType<VersionCatalogsExtension>()
-                .named("libs")
-                .findVersion("compose-multiplatform")
-                .orElseThrow { IllegalStateException("Version 'compose-multiplatform' is missing from libs.versions.toml") }
-                .requiredVersion
+        val composeVersion = target.irisCatalog.version("compose-multiplatform")
         val artifact = composeDesktopArtifact(System.getProperty("os.name"), System.getProperty("os.arch"))
         target.dependencies {
             add("implementation", "org.jetbrains.compose.desktop:$artifact:$composeVersion")
