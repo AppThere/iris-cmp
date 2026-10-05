@@ -43,15 +43,18 @@ class JvmAppConventionTest {
                 """
                 package org.appthere.iris.fixture
 
+                @Deprecated("use answer")
+                fun oldAnswer(): Int = 41
+
                 fun main() {
-                    val unused = 1
+                    println(oldAnswer())
                 }
                 """.trimIndent(),
             )
 
         val result = project.runner(":${FixtureProject.MODULE}:compileKotlin").buildAndFail()
 
-        assertContains(result.output, "Variable 'unused' is never used")
+        assertContains(result.output, "is deprecated")
     }
 
     private companion object {
