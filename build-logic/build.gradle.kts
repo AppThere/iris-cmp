@@ -5,7 +5,7 @@ plugins {
 group = "org.appthere.iris.buildlogic"
 
 // TestKit tests that build small fixture projects with the convention plugins applied.
-val functionalTest: SourceSet by sourceSets.creating
+val functionalTest: SourceSet = sourceSets.create("functionalTest")
 
 gradlePlugin {
     testSourceSets(functionalTest)
