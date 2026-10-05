@@ -63,6 +63,8 @@ internal class FixtureProject(
 
         fun androidApp(dir: File): FixtureProject = withPlugin(dir, "iris.app.android")
 
+        fun iosApp(dir: File): FixtureProject = withPlugin(dir, "iris.app.ios")
+
         private fun withPlugin(
             dir: File,
             pluginId: String,
