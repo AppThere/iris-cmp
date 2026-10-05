@@ -36,15 +36,15 @@ Phase 0: Foundations and spikes (in progress)
 - S4 done (D-028): Deflate from the platform zlib through Okio (approved dependency for `iris-io`, added to the catalog when Phase 1 uses it; system zlib on iOS approved); `iris-opc`/`iris-exr` take a codec interface. ZIP64 and raw entry copy are pure Kotlin in `iris-opc`. Measured on 1 GiB of EXR-like tiles: zlib 62-126 MiB/s deflate, 340-445 MiB/s inflate (JVM and Kotlin/Native); pure Kotlin inflate about 7x slower on Kotlin/Native; korlibs-compression does not compress. Raw copy of a 1 GiB package: 0.6 s. Spike ZIP archives (70 000 entries; 4.5 GiB) pass Info-ZIP and Python checks. Report: `docs/spikes/S4-deflate-zip64.md`; code: `spikes/s4-deflate/`.
 - S5 done (D-029): pure-Kotlin EXR is feasible. The spike writer's tiled `HALF`/`FLOAT` ZIP/NONE files parse in `exrheader`/`exrinfo` and decode bit-identically through OpenEXR 3.1's `exrmaketiled`; the spike reader decodes reference files (ImageMagick scanline ZIP/ZIPS/NONE, `exrmaketiled` tiled) bit-identically. 4096x4096 RGBA `HALF`, one thread, ZIP level 4: write 92 MiB/s, read 236 MiB/s, ratio 4.5. Report: `docs/spikes/S5-exr-feasibility.md`; code: `spikes/s5-exr/`.
 - S10 done (D-030, D-031; resolves P-004): 1024 chunks, `ZIP` level 4; `file-format.md` §1/§5 and `testing-tdd.md` §9 updated; R1/R2 reference documents adopted. Desktop numbers: R1 85 MiB, save 1.4 s, load 0.6 s, single-tile incremental save 132 ms; R2 2.5 GiB, save 17.8 s, load 3.7 s, incremental 3.2 s (about 2.9 s of it is the package copy, D-031). Report: `docs/spikes/S10-chunks-compression.md`; code: `spikes/s10-chunks/`.
+- S8 done (D-032, D-033; resolves P-006): `TileBuffer` uses Panama segments on the desktop JVM, pooled direct `ByteBuffer`s on Android, `nativeHeap` on Kotlin/Native, with per-pixel (64-bit) access in hot loops (1.3-1.6x the heap baseline on all three; per-sample access 2-3x). Unpooled direct buffers reached 6.2 GiB RSS on HotSpot; pools, arenas and `nativeHeap` stayed flat. kotlinx.collections.immutable 0.5.2 adopted. `ArchitectureTest` now lets `iris-pixels` import `kotlinx.cinterop` outside `commonMain`. Report: `docs/spikes/S8-tilebuffer-collections.md`; code: `spikes/s8-tilebuffer/`.
 
 ## Next
-1. S8 (`TileBuffer` native memory and persistent collections). Then S7, S11, S1, S2, S6, S3, S9.
+1. S7 (color management: in-house ICC subset or a wrapped native library such as Little CMS; compare against an lcms reference tool, dev-only). Then S11, S1, S2, S6, S3, S9.
 2. Kevin: XML in common code (raised by S12): a small in-house reader/writer, or a library such as xmlutil (license and target check first)? Needed by `iris-opc`, `iris-io` and `iris-svg` in Phase 1.
 3. Kevin: `architecture.md` §16 says `sealed interface IrisError`. A sealed type in `iris-core` cannot be extended by other modules, so `IrisError` is an open interface and each module defines a sealed hierarchy implementing it. Approve updating §16 to say so?
 4. Kevin: the 85% line-coverage floor for engine modules (`docs/dependencies.md`, Kover row) is not enforced yet. Add a Kover verification rule to `iris.kmp.library` for engine modules?
 5. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
 6. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
-7. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
 
 ## Notes
 - OpenEXR tools without `sudo`: `apt-get download openexr && dpkg -x openexr_*.deb <dir>`; the binaries use the OpenEXR 3.1 libraries already installed (see the S5 report, section 4).
@@ -65,6 +65,7 @@ Phase 0: Foundations and spikes (in progress)
 - iOS: simulator tests only; nothing runs on a physical iPhone or iPad.
 
 ## Unverified (could not be tested on the available machine)
+- S8: iOS and real Android devices not measured (ART numbers come from the x86_64 emulator).
 - S10 timings are desktop-only; the Galaxy Tab S10 Lite numbers (incremental save budget, R1) are still to measure.
 - S4 numbers come from this PC (JVM, Kotlin/Native linuxX64). macOS/iOS arm64 and Android devices are not measured; they also use zlib.
 - detekt rules that need type resolution do not run on iOS-only code (`iosMain`, `appleMain`): detekt 2.0.0-alpha.6 has no type-resolving task for Kotlin/Native compilations. Plain `detekt` still covers those files.
