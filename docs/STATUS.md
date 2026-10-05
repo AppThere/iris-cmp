@@ -34,9 +34,10 @@ Phase 0: Foundations and spikes (in progress)
 - **Part A complete.**
 - S12 done (D-027, resolves P-003): `iris-opc` is built here, extraction-ready for the planned KMP Office library: package `org.appthere.opc`, may depend on no module (rule table and `architecture.md` §1 updated; `verifyArchitecture` enforces it), own error types. Report and API sketch: `docs/spikes/S12-shared-opc.md`. Open from it: Deflate placement (S4) and XML in common code (decide before Phase 1 needs `[Content_Types].xml`, `.rels` and `document.xml`).
 - S4 done (D-028): Deflate from the platform zlib through Okio (approved dependency for `iris-io`, added to the catalog when Phase 1 uses it; system zlib on iOS approved); `iris-opc`/`iris-exr` take a codec interface. ZIP64 and raw entry copy are pure Kotlin in `iris-opc`. Measured on 1 GiB of EXR-like tiles: zlib 62-126 MiB/s deflate, 340-445 MiB/s inflate (JVM and Kotlin/Native); pure Kotlin inflate about 7x slower on Kotlin/Native; korlibs-compression does not compress. Raw copy of a 1 GiB package: 0.6 s. Spike ZIP archives (70 000 entries; 4.5 GiB) pass Info-ZIP and Python checks. Report: `docs/spikes/S4-deflate-zip64.md`; code: `spikes/s4-deflate/`.
+- S5 done (D-029): pure-Kotlin EXR is feasible. The spike writer's tiled `HALF`/`FLOAT` ZIP/NONE files parse in `exrheader`/`exrinfo` and decode bit-identically through OpenEXR 3.1's `exrmaketiled`; the spike reader decodes reference files (ImageMagick scanline ZIP/ZIPS/NONE, `exrmaketiled` tiled) bit-identically. 4096x4096 RGBA `HALF`, one thread, ZIP level 4: write 92 MiB/s, read 236 MiB/s, ratio 4.5. Report: `docs/spikes/S5-exr-feasibility.md`; code: `spikes/s5-exr/`.
 
 ## Next
-1. S5 (EXR feasibility). Needs Kevin's OK to install the OpenEXR command-line tools (BSD-3-Clause, dev-only) for checking our files. Then S10, S8, S7, S11, S1, S2, S6, S3, S9.
+1. S10 (chunk size and EXR compression: ZIP, ZIPS, PIZ; 1024/2048/4096 chunks). Then S8, S7, S11, S1, S2, S6, S3, S9.
 2. Kevin: XML in common code (raised by S12): a small in-house reader/writer, or a library such as xmlutil (license and target check first)? Needed by `iris-opc`, `iris-io` and `iris-svg` in Phase 1.
 3. Kevin: `architecture.md` §16 says `sealed interface IrisError`. A sealed type in `iris-core` cannot be extended by other modules, so `IrisError` is an open interface and each module defines a sealed hierarchy implementing it. Approve updating §16 to say so?
 4. Kevin: the 85% line-coverage floor for engine modules (`docs/dependencies.md`, Kover row) is not enforced yet. Add a Kover verification rule to `iris.kmp.library` for engine modules?
@@ -45,6 +46,7 @@ Phase 0: Foundations and spikes (in progress)
 7. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
 
 ## Notes
+- OpenEXR tools without `sudo`: `apt-get download openexr && dpkg -x openexr_*.deb <dir>`; the binaries use the OpenEXR 3.1 libraries already installed (see the S5 report, section 4).
 - CI flake seen once (run 37326053534): the emulator job's system image download failed ("Premature EOF"); a rerun passed. If it recurs, cache the system image/AVD in the emulator job.
 - Android status-bar icons are white on the light empty screen (no theme or edge-to-edge handling yet); fix with the real UI theme.
 - Version `0.1.0-dev`, bundle id and application id `org.appthere.iris` are placeholders (P-001).

@@ -12,6 +12,7 @@ fun main(args: Array<String>) {
         "compare" -> compare(File(args[1]), File(args[2]), args[3].split(","))
         "roundtrip" -> roundTrip()
         "bench" -> bench(args.getOrNull(1)?.toInt() ?: 4096)
+        "same" -> same(File(args[1]), File(args[2]))
     }
 }
 
@@ -112,4 +113,13 @@ private fun bench(size: Int) {
         println("${size}x$size RGBA half, 256 tiles, $compression level $level: ${bytes.size / 1024 / 1024} MiB (ratio ${"%.2f".format(mib * 1024 * 1024 / bytes.size)}), " +
             "write ${"%.0f".format(mib / (write.inWholeMilliseconds / 1000.0))} MiB/s, read ${"%.0f".format(mib / (read.inWholeMilliseconds / 1000.0))} MiB/s")
     }
+}
+
+/** Decodes both files and requires identical channels and identical sample bits. */
+private fun same(a: File, b: File) {
+    val x = readExr(a.readBytes())
+    val y = readExr(b.readBytes())
+    check(x.width == y.width && x.height == y.height && x.channels == y.channels) { "shape differs" }
+    val differing = x.data.indices.sumOf { c -> x.data[c].indices.count { x.data[c][it] != y.data[c][it] } }
+    println("${a.name} vs ${b.name}: ${x.width}x${x.height} ${x.channels.joinToString { it.name + ":" + it.type }}, differing samples: $differing")
 }
