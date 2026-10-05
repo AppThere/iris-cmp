@@ -204,7 +204,7 @@ public interface Tool {
 - Document settings choose a working space and depth class. Imported images keep their profile; conversion on import is by user choice or saved preference.
 - Blending runs in the working space or in linear light per document (`blendInLinear`). The reference behavior for blend modes follows the W3C compositing and blending definitions.
 - Order inside the render graph: source (working space) then adjustments, filters, effects, masks, blend then, at the end, the display transform (working to display profile) and optional soft-proof.
-- `iris-color` has no platform dependency. ICC support is a subset (matrix/TRC and LUT-based v2/v4 profiles for RGB, gray and CMYK) behind `ColorEngine`. **Spike S7** decides between an in-house subset and a wrapped native library (Little CMS is MIT-licensed).
+- `iris-color` has no platform dependency. ICC support is an in-house subset in pure Kotlin (matrix/TRC and LUT-based v2/v4 profiles for RGB, gray and CMYK) behind `ColorEngine`, verified against fixtures generated with Little CMS (D-034, spike S7). CLUT interpolation follows Little CMS: tetrahedral for device-space inputs, trilinear for Lab inputs.
 - Display profile and HDR capability come from `iris-platform-color`; when unavailable assume sRGB and show that in the status bar.
 
 ## 13. UI architecture (Compose Multiplatform)

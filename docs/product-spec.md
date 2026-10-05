@@ -202,7 +202,7 @@ Color-managed from the first release: every document has a working space, import
 - Display: the canvas transforms to the display profile of the monitor the window is on and re-transforms when the window moves. ICC on Windows and macOS, color-space info on iOS and Android, best effort on Linux; otherwise assume sRGB and say so in the status bar. Wide-gamut/HDR output where the OS exposes an extended-range surface; SDR tone mapping is a user setting.
 - Print: soft proofing with a chosen CMYK or press profile, rendering intent, black point compensation, gamut warning. CMYK and Lab are import/convert/export targets at 1.0; true CMYK editing is post-1.0. Spot colors and overprint preview are tracked for PDF export.
 - Color tools: picker in HSV, HSL, Oklch, Lab, RGB, CMYK; swatches, palettes, harmony, gamut-aware warnings; out-of-gamut handling by perceptual or relative colorimetric clipping.
-- Implementation: use a vetted color-management library behind a common interface (for example Little CMS through native bindings, subject to Spike S7) rather than writing ICC handling from scratch.
+- Implementation: an in-house ICC subset in pure Kotlin behind a common interface, verified against Little CMS (used only as a development reference to generate test fixtures). Spike S7 showed a prototype matching Little CMS to rounding (D-034).
 
 ## 11. UI and UX in Compose
 

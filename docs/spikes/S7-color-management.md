@@ -2,7 +2,7 @@
 
 Question (`docs/phase-plan.md`): an in-house ICC subset or a wrapped Little CMS (MIT)? Exit criteria: ICC matrix/TRC and LUT transforms compared against a reference; packaging notes for each store.
 
-Status: measurements done 2026-10-05. **Decision pending (Kevin)**: the recommendation deviates from `docs/product-spec.md` §10 ("use a vetted color-management library ... rather than writing ICC handling from scratch"), and the alternative is a native library. Code: `spikes/s7-color/` (pure-Kotlin JVM prototype, about 350 lines). Reference: Little CMS 2.17's `transicc` (already installed with `liblcms2-utils`), relative colorimetric intent, double precision.
+Status: done 2026-10-05. **Decided: route A (D-034)**; `product-spec.md` §10 updated with Kevin's approval; test profiles are generated from published definitions, third-party profiles only after a license check. Code: `spikes/s7-color/` (pure-Kotlin JVM prototype, about 350 lines). Reference: Little CMS 2.17's `transicc` (already installed with `liblcms2-utils`), relative colorimetric intent, double precision.
 
 ## 1. Prototype
 
