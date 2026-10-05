@@ -1,0 +1,3 @@
+# Archive members check-minos.sh accepts with a different minos (D-026). One exact member name per line.
+# Skiko's ICU data blob: data only, no code, built with minos 18.5.
+libicu.icudtl_dat.o

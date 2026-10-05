@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 /**
  * Convention for the iOS app shell: a static Compose framework named [FRAMEWORK_NAME] for each iOS target.
  * The Xcode project embeds it through `embedAndSignAppleFrameworkForXcode`; linking needs macOS.
- * The minimum iOS version comes from the catalog (D-024).
+ * The minimum iOS version comes from the catalog (D-026).
  */
 class IosAppConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {

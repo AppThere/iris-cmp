@@ -117,8 +117,8 @@ jobs:
           name: ios-screenshot
           path: ios-screenshot.png
           if-no-files-found: ignore
-      - name: Binaries target iOS 14 (D-024)
+      - name: Binaries target iOS 15 (D-026)
         run: |
-          .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosSimulatorArm64/debugFramework/IrisApp.framework/IrisApp
-          .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosArm64/debugFramework/IrisApp.framework/IrisApp
-          .github/scripts/check-minos.sh 14.0 app-ios/build/xcode/Debug-iphonesimulator/Iris.app/Iris
+          .github/scripts/check-minos.sh 15.0 app-ios/build/bin/iosSimulatorArm64/debugFramework/IrisApp.framework/IrisApp
+          .github/scripts/check-minos.sh 15.0 app-ios/build/bin/iosArm64/debugFramework/IrisApp.framework/IrisApp
+          .github/scripts/check-minos.sh 15.0 app-ios/build/xcode/Debug-iphonesimulator/Iris.app/Iris

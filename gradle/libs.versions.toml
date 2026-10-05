@@ -18,8 +18,8 @@ android-compileSdk = "37"
 android-minSdk = "28"
 android-targetSdk = "36"
 
-# iOS minimum (D-024); Kotlin/Native defaults to 15.0, so every native binary overrides it
-ios-minVersion = "14.0"
+# iOS minimum (D-026), pinned explicitly on every native binary (also the Kotlin/Native 2.4.20 default)
+ios-minVersion = "15.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
