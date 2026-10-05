@@ -103,12 +103,22 @@ jobs:
           path: ~/.konan
           key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
       - run: ./gradlew iosSimulatorArm64Test :app-ios:linkDebugFrameworkIosSimulatorArm64 :app-ios:linkDebugFrameworkIosArm64 --continue
-      # app-ios has no sources until A11, so no framework is linked yet; say so instead of passing silently.
-      - name: Frameworks target iOS 14 (not yet checkable)
-        if: hashFiles('app-ios/src/**/*.kt') == ''
-        run: echo "::notice title=minos check skipped::app-ios has no Kotlin sources yet (A11), so no IrisApp framework is linked."
-      - name: Frameworks target iOS 14 (D-024)
-        if: hashFiles('app-ios/src/**/*.kt') != ''
+      - name: Build the Xcode app for the simulator
+        run: >
+          xcodebuild -project app-ios/iosApp/iosApp.xcodeproj -target iosApp -configuration Debug
+          -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED=NO
+          SYMROOT="$PWD/app-ios/build/xcode" build
+      - name: Launch the app on a simulator
+        run: .github/scripts/ios-smoke.sh app-ios/build/xcode/Debug-iphonesimulator/Iris.app org.appthere.iris ios-screenshot.png
+      - name: Keep the simulator screenshot
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios-screenshot
+          path: ios-screenshot.png
+          if-no-files-found: ignore
+      - name: Binaries target iOS 14 (D-024)
         run: |
           .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosSimulatorArm64/debugFramework/IrisApp.framework/IrisApp
           .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosArm64/debugFramework/IrisApp.framework/IrisApp
+          .github/scripts/check-minos.sh 14.0 app-ios/build/xcode/Debug-iphonesimulator/Iris.app/Iris

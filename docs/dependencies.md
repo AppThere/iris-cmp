@@ -28,6 +28,7 @@ Pinned to commit SHAs in `.github/workflows/ci.yml`.
 | `actions/cache` | v6.1.0 (`55cc8345`) | MIT | 2026-10-05 |
 | `gradle/actions/setup-gradle` | v6.4.0 (`3f5f9ada`) | MIT | 2026-10-05 |
 | `reactivecircus/android-emulator-runner` | v2.38.0 (`a421e438`) | Apache-2.0 | 2026-10-05 |
+| `actions/upload-artifact` | v7.0.1 (`043fb46d`) | MIT | 2026-10-05 |
 
 Runner images: `ubuntu-24.04` (Android SDK with `android-37.0`), `windows-2025`, `macos-26` (Xcode 26.4.1 selected; the image default is 26.6).
 
