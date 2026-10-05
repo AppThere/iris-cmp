@@ -57,6 +57,36 @@ class JvmAppConventionTest {
         assertContains(result.output, "is deprecated")
     }
 
+    @Test
+    fun `jvm app tests use kotlin test on the JUnit platform`() {
+        val project =
+            FixtureProject
+                .jvmApp(dir)
+                .withSource("main", "org/appthere/iris/fixture/Main.kt", "package org.appthere.iris.fixture\n\nfun answer() = 42\n")
+                .withSource(
+                    "test",
+                    "org/appthere/iris/fixture/AnswerTest.kt",
+                    """
+                    package org.appthere.iris.fixture
+
+                    import kotlin.test.Test
+                    import kotlin.test.assertEquals
+
+                    class AnswerTest {
+                        @Test
+                        fun answerIs42() {
+                            assertEquals(42, answer())
+                        }
+                    }
+                    """.trimIndent(),
+                )
+
+        project.runner(":${FixtureProject.MODULE}:test").build()
+
+        val report = project.moduleDir.resolve("build/test-results/test/TEST-org.appthere.iris.fixture.AnswerTest.xml")
+        assertContains(report.readText(), "tests=\"1\"")
+    }
+
     private companion object {
         const val JAVA_17_CLASS_FILE = 61
     }
