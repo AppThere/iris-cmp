@@ -8,6 +8,8 @@ internal data class ModuleRule(
     val allowed: Set<String> = emptySet(),
     val anyDependency: Boolean = false,
     val importsChecked: Boolean = false,
+    /** Forbidden prefixes this module may still import outside `commonMain` (platform actuals). */
+    val platformSourceSetExemptions: Set<String> = emptySet(),
 )
 
 internal object ArchitectureRules {
@@ -32,7 +34,8 @@ internal object ArchitectureRules {
     val table: Map<String, ModuleRule> =
         mapOf(
             "iris-core" to engine(),
-            "iris-pixels" to engine("core"),
+            // The TileBuffer actuals use nativeHeap on Kotlin/Native (D-032).
+            "iris-pixels" to engine("core").copy(platformSourceSetExemptions = setOf("kotlinx.cinterop.")),
             "iris-color" to engine("core", "pixels"),
             "iris-vector" to engine("core"),
             "iris-exr" to engine("core", "pixels"),

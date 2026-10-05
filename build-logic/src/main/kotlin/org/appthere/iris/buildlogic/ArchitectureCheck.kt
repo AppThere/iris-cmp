@@ -67,7 +67,17 @@ private fun importViolations(
     if (!rule.importsChecked) return emptyList()
     return module.imports
         .filter { import -> ArchitectureRules.FORBIDDEN_IMPORT_PREFIXES.any { import.name.startsWith(it) } }
+        .filterNot { import -> isExempt(import, rule) }
         .map { "${module.name} must not import ${it.name} (${it.path}:${it.line})" }
+}
+
+/** `src/<sourceSet>/...`: an exemption applies in every source set except `commonMain` and `commonTest`. */
+private fun isExempt(
+    import: SourceImport,
+    rule: ModuleRule,
+): Boolean {
+    val sourceSet = import.path.split('/').getOrElse(1) { "" }
+    return !sourceSet.startsWith("common") && rule.platformSourceSetExemptions.any { import.name.startsWith(it) }
 }
 
 private fun describe(allowed: Set<String>): String =
