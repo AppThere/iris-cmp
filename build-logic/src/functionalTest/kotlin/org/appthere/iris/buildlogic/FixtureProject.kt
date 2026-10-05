@@ -48,6 +48,8 @@ internal class FixtureProject(
 
         fun kmpCompose(dir: File): FixtureProject = withPlugin(dir, "iris.kmp.compose")
 
+        fun desktopApp(dir: File): FixtureProject = withPlugin(dir, "iris.app.desktop")
+
         private fun withPlugin(
             dir: File,
             pluginId: String,
