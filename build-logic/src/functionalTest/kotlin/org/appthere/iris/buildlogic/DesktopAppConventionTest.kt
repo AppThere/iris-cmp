@@ -38,6 +38,23 @@ class DesktopAppConventionTest {
         assertTrue(COMPOSER in screen.readBytes().decodeToString(), "MainKt was not compose-compiled")
     }
 
+    @Test
+    fun `the app jvm may use native access, which Skia needs on JDK 24 and later`() {
+        val project =
+            FixtureProject.desktopApp(dir).withBuildScript(
+                """
+                tasks.register("printJvmArgs") {
+                    val args = compose.desktop.application.jvmArgs.joinToString(" ")
+                    doLast { println("JVM_ARGS=" + args) }
+                }
+                """,
+            )
+
+        val result = project.runner(":${FixtureProject.MODULE}:printJvmArgs").build()
+
+        assertContains(result.output, "--enable-native-access=ALL-UNNAMED")
+    }
+
     private companion object {
         const val COMPOSER = "Landroidx/compose/runtime/Composer;"
     }
