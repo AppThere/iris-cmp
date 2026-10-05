@@ -18,12 +18,14 @@ Phase 0: Foundations and spikes (in progress)
   - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
   - `iris.kmp.compose`: `iris.kmp.library` plus the Compose compiler plugin and the Compose runtime in `commonMain`. Verified on JVM and Android; not the `org.jetbrains.compose` plugin (left for the app conventions, which need packaging and resources).
   - `iris.app.desktop`: Kotlin/JVM app with the Compose compiler, the `org.jetbrains.compose` plugin and the Compose desktop runtime for the build host; main class `MainKt` in the module's package. Packaging formats are not configured yet. A desktop build only bundles the host's native Skiko, so each OS is packaged on its own runner (A8).
+  - `iris.app.android`: AGP application with built-in Kotlin (AGP 9 fails if `org.jetbrains.kotlin.android` is applied), the Compose compiler and `activity-compose`. `applicationId` is the package root `org.appthere.iris` (placeholder, P-001); min SDK 28, target and compile SDK 36. The app module supplies its own manifest. Signing, versionCode and release builds are not configured yet.
 
 ## Next
-1. A2, remaining: `iris.app.android`, `iris.app.ios` (test first for each).
+1. A2, remaining: `iris.app.ios` (test first).
 2. A2: check whether iOS klibs cross-compile on Linux (phase-0 §4 item 5). So far the iOS targets are only declared; nothing has compiled them.
 
 ## Notes
+- No Android NDK on the dev machine, so AGP packages Compose's `libandroidx.graphics.path.so` unstripped (build message "Unable to strip the following libraries"). Harmless for debug; decide on installing an NDK (or pinning `ndkVersion`) before release builds.
 - services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
 
