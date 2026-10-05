@@ -38,6 +38,10 @@ gradlePlugin {
             id = "iris.architecture"
             implementationClass = "org.appthere.iris.buildlogic.ArchitectureConventionPlugin"
         }
+        register("golden") {
+            id = "iris.golden"
+            implementationClass = "org.appthere.iris.buildlogic.GoldenConventionPlugin"
+        }
         register("quality") {
             id = "iris.quality"
             implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"

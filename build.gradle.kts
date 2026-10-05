@@ -2,6 +2,7 @@
 
 plugins {
     id("iris.architecture")
+    id("iris.golden")
 }
 
 tasks.named("check") {
