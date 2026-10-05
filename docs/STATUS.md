@@ -18,18 +18,22 @@ Phase 0: Foundations and spikes (in progress)
   - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
   - `iris.kmp.compose`: `iris.kmp.library` plus the Compose compiler plugin and the Compose runtime in `commonMain`. Verified on JVM and Android; not the `org.jetbrains.compose` plugin (left for the app conventions, which need packaging and resources).
   - `iris.app.desktop`: Kotlin/JVM app with the Compose compiler, the `org.jetbrains.compose` plugin and the Compose desktop runtime for the build host; main class `MainKt` in the module's package. Packaging formats are not configured yet. A desktop build only bundles the host's native Skiko, so each OS is packaged on its own runner (A8).
+  - iOS on Linux answered (phase-0 §4 item 5; `IosOnLinuxTest`): Kotlin/Native 2.4.20 compiles `iosArm64` and `iosSimulatorArm64` klibs on Linux with no opt-in flag. That covers main and test sources, Foundation/UIKit calls and composables. A type error in `iosMain` fails the build here. Linking and `iosSimulatorArm64Test` are SKIPPED (not failed), so a green Linux build has not run any iOS test.
   - `iris.app.android`: AGP application with built-in Kotlin (AGP 9 fails if `org.jetbrains.kotlin.android` is applied), the Compose compiler and `activity-compose`. `applicationId` is the package root `org.appthere.iris` (placeholder, P-001); min SDK 28, target and compile SDK 36. The app module supplies its own manifest. Signing, versionCode and release builds are not configured yet.
 
 ## Next
 1. A2, remaining: `iris.app.ios` (test first).
-2. A2: check whether iOS klibs cross-compile on Linux (phase-0 §4 item 5). So far the iOS targets are only declared; nothing has compiled them.
+2. Kevin: decide whether to set `kotlin.native.ignoreDisabledTargets=true` (see Notes).
 
 ## Notes
+- First Kotlin/Native use downloads the 2.4.20 distribution into `~/.konan` (~300 MB; 21 min on this connection). CI (A8) should cache `~/.konan`.
+- On a non-Mac host every KMP module prints the configuration warning "Native task 'iosSimulatorArm64Test' is disabled". `kotlin.native.ignoreDisabledTargets=true` in `gradle.properties` silences it. Not set yet: waiting for Kevin.
 - No Android NDK on the dev machine, so AGP packages Compose's `libandroidx.graphics.path.so` unstripped (build message "Unable to strip the following libraries"). Harmless for debug; decide on installing an NDK (or pinning `ndkVersion`) before release builds.
 - services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
 
 ## Unverified (could not be tested on the available machine)
+- iOS linking, frameworks and running iOS tests: compile-only on Linux. Needs macOS CI or Kevin's Mac.
 - iOS and macOS: no macOS on the development machine. Evidence comes from Kevin's MacBook Air M1 or macOS CI.
 - No iPad available: iPadOS Apple Pencil input (S9) is unverified.
 - No pen on Windows, macOS or Linux: those parts of S3 and S9 are partial (D-022).
