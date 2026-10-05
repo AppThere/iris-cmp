@@ -1,5 +1,6 @@
 package org.appthere.iris.core
 
+import io.kotest.common.ExperimentalKotest
 import io.kotest.property.Arb
 import io.kotest.property.PropTestConfig
 import io.kotest.property.arbitrary.bind
@@ -10,6 +11,8 @@ import kotlin.math.PI
 import kotlin.test.Test
 
 class MatrixProperties {
+    // A fixed seed keeps the run deterministic; Kotest marks seeding experimental (single opt-in site, as D-021 asks).
+    @OptIn(ExperimentalKotest::class)
     private val config = PropTestConfig(seed = 20261005L)
 
     /** Well-conditioned affine matrices: translate * rotate * scale, with scales kept away from zero. */
