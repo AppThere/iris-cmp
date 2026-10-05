@@ -18,14 +18,17 @@ Phase 0: Foundations and spikes (in progress)
   - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
   - `iris.kmp.compose`: `iris.kmp.library` plus the Compose compiler plugin and the Compose runtime in `commonMain`. Verified on JVM and Android; not the `org.jetbrains.compose` plugin (left for the app conventions, which need packaging and resources).
   - `iris.app.desktop`: Kotlin/JVM app with the Compose compiler, the `org.jetbrains.compose` plugin and the Compose desktop runtime for the build host; main class `MainKt` in the module's package. Packaging formats are not configured yet. A desktop build only bundles the host's native Skiko, so each OS is packaged on its own runner (A8).
+  - `iris.jvm.app` (added for A3): Kotlin/JVM `application` with main class `MainKt` in the module's package; shares the JVM setup with `iris.app.desktop`.
   - iOS on Linux answered (phase-0 §4 item 5; `IosOnLinuxTest`): Kotlin/Native 2.4.20 compiles `iosArm64` and `iosSimulatorArm64` klibs on Linux with no opt-in flag. That covers main and test sources, Foundation/UIKit calls and composables. A type error in `iosMain` fails the build here. Linking and `iosSimulatorArm64Test` are SKIPPED (not failed), so a green Linux build has not run any iOS test.
-  - `iris.app.android`: AGP application with built-in Kotlin (AGP 9 fails if `org.jetbrains.kotlin.android` is applied), the Compose compiler and `activity-compose`. `applicationId` is the package root `org.appthere.iris` (placeholder, P-001); min SDK 28, target and compile SDK 36. The app module supplies its own manifest. Signing, versionCode and release builds are not configured yet.
+  - `iris.app.android`: AGP application with built-in Kotlin (AGP 9 fails if `org.jetbrains.kotlin.android` is applied), the Compose compiler and `activity-compose`. `applicationId` is the package root `org.appthere.iris` (placeholder, P-001); min SDK 28, target SDK 36, compile SDK 37 (D-025). The app module supplies its own manifest. Signing, versionCode and release builds are not configured yet.
   - `iris.app.ios`: Kotlin Multiplatform with only `iosArm64` and `iosSimulatorArm64`, each with a static `IrisApp` framework (debug and release) for Xcode's `embedAndSignAppleFrameworkForXcode`; Compose compiler, runtime and UI. Minimum iOS 14.0 (D-024) on every iOS binary, in libraries and the app. The Xcode project comes with A11.
+- A3 done: 23 module skeletons (all of `architecture.md` §1) in `settings.gradle.kts`. Each has a build script with its convention plugin and only the allowed project dependencies, and a README (package, plugin, dependency rule). No sources yet. `iris-testing` declares no dependencies until A10; the apps depend on `iris-ui`, `iris-editor`, `iris-render-skia` and the three platform modules. `./gradlew check` is green across all modules.
 
 ## Next
-1. A3: empty module skeletons for every module in `architecture.md` §1.
+1. A4: `ArchitectureTest` (rule table from `architecture.md` §1: project dependencies and forbidden imports), wired into `check`.
 
 ## Notes
+- A clean first `./gradlew check` with all modules took 41 min, mostly downloading Android Lint 32.3.1. Warm runs take under a minute. CI (A8) should cache `~/.gradle/caches` as well as `~/.konan`.
 - First Kotlin/Native use downloads the 2.4.20 distribution into `~/.konan` (~300 MB; 21 min on this connection). CI (A8) should cache `~/.konan`.
 - On a non-Mac host every KMP module prints the configuration warning "Native task 'iosSimulatorArm64Test' is disabled". Silenced with `kotlin.native.ignoreDisabledTargets=true` in the root `gradle.properties` (Kevin, 2026-10-04). Fixture builds keep the warning, which `IosOnLinuxTest` checks.
 - No Android NDK on the dev machine, so AGP packages Compose's `libandroidx.graphics.path.so` unstripped (build message "Unable to strip the following libraries"). Harmless for debug; decide on installing an NDK (or pinning `ndkVersion`) before release builds.
@@ -42,7 +45,7 @@ Phase 0: Foundations and spikes (in progress)
 - None.
 
 ## Open TODOs (each must have an id)
-- None.
+- T-001: `app-android` lint warning MissingApplicationIcon (skeleton manifest has no icon). Fix in A11 with the hello-world app resources.
 
 ## Phase reviews
 - None yet.
