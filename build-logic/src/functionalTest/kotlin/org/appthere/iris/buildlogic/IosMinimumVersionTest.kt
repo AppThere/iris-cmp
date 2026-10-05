@@ -5,13 +5,13 @@ import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
 
-/** D-024: iOS 14 is the minimum, below the Kotlin/Native default of 15.0. Linking (and so the Mach-O minos) needs macOS. */
+/** D-026: iOS 15 is the minimum, pinned explicitly (it is also the Kotlin/Native 2.4.20 default). Linking needs macOS. */
 class IosMinimumVersionTest {
     @TempDir
     lateinit var dir: File
 
     @Test
-    fun `library test binaries target ios 14`() {
+    fun `library test binaries target ios 15`() {
         val project = FixtureProject.kmpLibrary(dir).withBuildScript(PRINT_BINARIES)
 
         val result = project.runner(":${FixtureProject.MODULE}:printBinaries").build()
@@ -20,7 +20,7 @@ class IosMinimumVersionTest {
     }
 
     @Test
-    fun `app frameworks target ios 14`() {
+    fun `app frameworks target ios 15`() {
         val project = FixtureProject.iosApp(dir).withBuildScript(PRINT_BINARIES)
 
         val result = project.runner(":${FixtureProject.MODULE}:printBinaries").build()
@@ -41,7 +41,7 @@ class IosMinimumVersionTest {
                     .flatMap { target ->
                         target.binaries.map {
                             target.name + ":" + it.name + ":" +
-                                ("-Xoverride-konan-properties=minVersion.ios=14.0" in it.freeCompilerArgs)
+                                ("-Xoverride-konan-properties=minVersion.ios=15.0" in it.freeCompilerArgs)
                         }
                     }
                     .sorted()
