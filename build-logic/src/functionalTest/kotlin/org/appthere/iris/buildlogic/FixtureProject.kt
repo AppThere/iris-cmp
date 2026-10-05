@@ -65,6 +65,8 @@ internal class FixtureProject(
 
         fun iosApp(dir: File): FixtureProject = withPlugin(dir, "iris.app.ios")
 
+        fun jvmApp(dir: File): FixtureProject = withPlugin(dir, "iris.jvm.app")
+
         private fun withPlugin(
             dir: File,
             pluginId: String,
