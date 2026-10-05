@@ -2,7 +2,7 @@
 
 Question (`docs/phase-plan.md`): which multiplatform library or small implementation gives Deflate/Inflate on all targets, and ZIP64 read/write with raw entry copy? Exit criteria: round trip of 1 GB of EXR-like data; raw copy benchmark.
 
-Status: measurements done 2026-10-05 on the Linux dev machine (JVM and Kotlin/Native linuxX64). **Decision pending (Kevin):** the recommended route uses the platform's zlib, a native library under the stop-and-ask rule. Code: `spikes/s4-deflate/` (standalone Gradle build, not part of the product; run with `./gradlew -p spikes/s4-deflate jvmRun --args="deflate 1024"`, `jvmRun --args="zip <dir> huge"`, or the `linuxX64` release executable).
+Status: done 2026-10-05 (JVM and Kotlin/Native linuxX64 on the Linux dev machine). **Decided: option A (D-028)**, with Okio and the system zlib on iOS approved by Kevin. Code: `spikes/s4-deflate/` (standalone Gradle build, not part of the product; run with `./gradlew -p spikes/s4-deflate jvmRun --args="deflate 1024"`, `jvmRun --args="zip <dir> huge"`, or the `linuxX64` release executable).
 
 ## 1. Candidates
 

@@ -34,4 +34,4 @@ Runner images: `ubuntu-24.04` (Android SDK with `android-37.0`), `windows-2025`,
 
 Sources for all rows: Maven Central and Google Maven metadata (latest stable), POM license fields, the Kotlin Gradle plugin compatibility table, the AGP release notes, the Gradle compatibility matrix and the detekt compatibility table. Approved by Kevin 2026-10-04.
 
-Deferred until a task needs them: `kotlinx-collections-immutable` 0.5.2 (Apache-2.0, decided by S8), `kotlinx-benchmark` 0.5.0 (Apache-2.0, first benchmark), foojay toolchain resolver (not needed: the local JDK 25 runs the build and CI uses `setup-java`).
+Deferred until a task needs them: Okio 3.18.2 (Apache-2.0; approved 2026-10-05 for `iris-io`'s Deflate provider, D-028; uses `java.util.zip` on JVM/Android and the system zlib on iOS), `kotlinx-collections-immutable` 0.5.2 (Apache-2.0, decided by S8), `kotlinx-benchmark` 0.5.0 (Apache-2.0, first benchmark), foojay toolchain resolver (not needed: the local JDK 25 runs the build and CI uses `setup-java`).
