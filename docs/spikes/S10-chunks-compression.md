@@ -2,7 +2,7 @@
 
 Question (`docs/phase-plan.md`, P-004): which chunk size (1024, 2048, 4096) and which EXR compression (ZIP, ZIPS, PIZ)? Exit criteria: save/load time and size for the reference documents at the three chunk sizes.
 
-Status: desktop measurements done 2026-10-05 (12-core Linux PC, NVMe, JDK 25). Tablet numbers come later (hardware matrix). **Decision pending (Kevin)**: the recommended chunk size changes `docs/file-format.md` §5.1, and one finding concerns §10. Code: `spikes/s10-chunks/` (reuses the S5 EXR codec and the S4 ZIP writer).
+Status: done 2026-10-05 (12-core Linux PC, NVMe, JDK 25). Tablet numbers come later (hardware matrix). **Decided (Kevin): ZIP level 4 and 1024 chunks (D-030); the package-copy floor accepted with reworded docs, R1 and R2 adopted as reference documents (D-031).** Code: `spikes/s10-chunks/` (reuses the S5 EXR codec and the S4 ZIP writer).
 
 ## 1. Reference documents
 

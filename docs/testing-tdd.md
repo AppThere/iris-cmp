@@ -86,6 +86,11 @@ Required before a format-related phase can close (see `docs/file-format.md` sect
 
 ## 9. Performance budgets
 
+Reference documents (adopted from spike S10; built by a fixture generator, not checked-in files):
+
+- **R1 illustration**: 4096 x 4096, 30 layers, depth `8i`, painted content; a full background, 4 layers at about 60 % coverage, 10 at 25 %, 15 small details.
+- **R2 large 16-bit**: 10000 x 10000 (100 megapixels), 3 full layers, depth `16i`, photo-like content.
+
 Budgets are measured on the reference devices chosen in Phase 0 (one low-end Android phone, one mid-range Android tablet, one iPad, one Windows 11 laptop, one Linux/Wayland machine, one Mac). Starting targets (from the product spec, to be confirmed by Phase 0 measurements):
 
 | Metric | Budget |
@@ -96,7 +101,7 @@ Budgets are measured on the reference devices chosen in Phase 0 (one low-end And
 | Cold start to blank canvas | under 2 s desktop, under 3 s tablet |
 | Max canvas | 100 megapixels at 16-bit on desktop without a memory budget error |
 | Steady-state allocation in brush stamping and compositing | zero per frame |
-| Incremental save of a single-tile edit | proportional to changed chunks; under 500 ms for the reference document |
+| Incremental save of a single-tile edit | encoding proportional to changed chunks; under 500 ms for R1. IO is one sequential copy of the package (D-031), so R2 takes longer |
 
 A budget miss fails the phase gate unless Kevin approves a recorded exception.
 

@@ -10,7 +10,7 @@ Placeholders: namespace and relationship-type URIs below use `appthere.org`. Kev
 
 - Open and documented: another developer can read a file with a ZIP tool, an XML parser, an EXR reader and an SVG renderer.
 - Lossless for pixel data at every supported bit depth.
-- Incremental saves cost time proportional to what changed, not to document size.
+- Incremental saves cost encoding time proportional to what changed: unchanged entries are raw-copied, never recompressed. The IO is one sequential copy of the package into the new file (D-031).
 - Forward compatible: a reader preserves parts and relationships it does not understand when it rewrites a file.
 - Safe to open untrusted files (see section 11).
 
@@ -94,7 +94,7 @@ Rules:
 
 ```xml
 <iris:layerParts xmlns:iris="urn:appthere:iris:1" xmlns:r="..." layerId="l1" kind="raster"
-                 chunkSize="2048" tileSize="256" pixelType="half" channels="RGBA">
+                 chunkSize="1024" tileSize="256" pixelType="half" channels="RGBA">
   <iris:chunk cx="0" cy="0" r:id="rId1" bytes="1834221"/>
   <iris:chunk cx="1" cy="0" r:id="rId2" bytes="402811"/>
   <iris:maskChunk cx="0" cy="0" r:id="rId3"/>
@@ -107,7 +107,7 @@ Vector layers instead have `<iris:vector r:id="..."/>` and optional `<iris:vecto
 
 ### 5.1 Chunks
 
-A raster layer's pixels are split into **chunks** of 2048 x 2048 layer pixels aligned to the layer origin (chunk `(cx, cy)` covers `x` in `[2048*cx, 2048*(cx+1))`). Each non-empty chunk is one EXR file. A chunk with no non-transparent tiles is not written. The chunk size is a named constant (`RasterLayout.CHUNK_SIZE`) so Phase 0 benchmarks can tune it; the value in use is recorded in `layer.xml`.
+A raster layer's pixels are split into **chunks** of 1024 x 1024 layer pixels aligned to the layer origin (chunk `(cx, cy)` covers `x` in `[1024*cx, 1024*(cx+1))`; D-030). Each non-empty chunk is one EXR file. A chunk with no non-transparent tiles is not written. The chunk size is a named constant (`RasterLayout.CHUNK_SIZE`) so Phase 0 benchmarks can tune it; the value in use is recorded in `layer.xml`.
 
 Why chunks: a save rewrites only the chunks whose tiles changed, and a layer can be unbounded and sparse without one huge file.
 
@@ -116,12 +116,12 @@ Why chunks: a save rewrites only the chunks whose tiles changed, and a layer can
 | Property | Value |
 | --- | --- |
 | Storage | Tiled, `ONE_LEVEL`, tile size 256 x 256 |
-| Compression | `ZIP` by default. Phase 0 benchmarks `PIZ` and `ZIPS`; the choice is logged in `docs/decisions.md`. Scratch/recovery files may use `NO_COMPRESSION` |
+| Compression | `ZIP`, zlib level 4 (D-030; Phase 0 spike S10 measured `PIZ` and found `ZIPS` identical to `ZIP` in tiled files). Scratch/recovery files may use `NO_COMPRESSION` |
 | Channels | Color: `R`, `G`, `B`, `A`. Grayscale layers: `Y`, `A`. Masks: `Y` only |
 | Pixel type | See 5.3 |
 | Alpha | **Premultiplied** (the OpenEXR convention). Memory and disk agree |
 | `dataWindow` | Tile-aligned bounding box of non-empty tiles within the chunk, in layer pixel coordinates (can be negative) |
-| `displayWindow` | The chunk's full 2048 x 2048 area |
+| `displayWindow` | The chunk's full 1024 x 1024 area |
 | Empty tiles inside `dataWindow` | Written as all-zero tiles (they compress to a few bytes) so the file never has missing tiles |
 | `lineOrder` | `INCREASING_Y` |
 | Deep data, multi-part | Not written |
@@ -160,7 +160,7 @@ The codec is pure Kotlin, no native code, so it behaves identically on every tar
 
 - `ExrReader.open(source)` gives header and tile index. `readTile(tx, ty, into: TileBuffer)` decodes one tile.
 - `ExrWriter.begin(header)`, then `writeTile(tx, ty, from: TileBuffer)` in any order, then `finish()` (writes the offset table).
-- Supported to write: tiled, `HALF`/`FLOAT`, `NO_COMPRESSION`, `ZIP` (and `PIZ`/`ZIPS` if adopted). Supported to read in Phase 1: the same, plus scanline files and `UINT`. Reading `RLE`, `PXR24`, `B44`, `B44A`, `DWAA`, `DWAB` and multi-part files is Phase 6 (import of third-party EXR). Deep files are rejected with a clear error.
+- Supported to write: tiled, `HALF`/`FLOAT`, `NO_COMPRESSION`, `ZIP`. (`PIZ` may return later as an optional size optimization for `HALF` documents; D-030.) Supported to read in Phase 1: the same, plus scanline files and `UINT`. Reading `RLE`, `PXR24`, `B44`, `B44A`, `DWAA`, `DWAB` and multi-part files is Phase 6 (import of third-party EXR). Deep files are rejected with a clear error.
 - Compression needs Deflate. Phase 0 spike S4 decides the provider (a multiplatform library or a small pure-Kotlin implementation) behind `interface Deflater`. It must be Apache-compatible.
 - Conformance is proven with reference files: fixtures produced by the OpenEXR reference implementation (the public `openexr-images` set is BSD-3-Clause; confirm license before copying files into `testdata/`) plus files written by our codec and read back by a reference tool in the nightly CI job.
 
