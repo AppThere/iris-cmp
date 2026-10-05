@@ -36,7 +36,7 @@ internal object ArchitectureRules {
             "iris-color" to engine("core", "pixels"),
             "iris-vector" to engine("core"),
             "iris-exr" to engine("core", "pixels"),
-            "iris-opc" to engine("core"),
+            "iris-opc" to engine(),
             "iris-svg" to engine("core", "vector", "color"),
             "iris-model" to engine("core", "pixels", "color", "vector"),
             "iris-io" to engine("model", "exr", "opc", "svg"),
