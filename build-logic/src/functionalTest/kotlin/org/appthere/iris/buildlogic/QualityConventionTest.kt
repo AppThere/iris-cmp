@@ -30,7 +30,7 @@ class QualityConventionTest {
     }
 
     @Test
-    fun `check runs formatting, static analysis, size limits and coverage verification`() {
+    fun `check runs formatting, static analysis, size limits, license and coverage verification`() {
         val project = FixtureProject.kmpLibrary(dir).withCommonSource("Answer.kt", "public fun answer(): Int = 42\n")
 
         val result = project.runner("$module:check", "--dry-run").build()
@@ -42,6 +42,7 @@ class QualityConventionTest {
         assertContains(result.output, "$module:detektTestJvm SKIPPED")
         assertContains(result.output, "$module:koverVerify SKIPPED")
         assertContains(result.output, "$module:verifySizeLimits SKIPPED")
+        assertContains(result.output, "$module:licenseCheck SKIPPED")
     }
 
     @Test
