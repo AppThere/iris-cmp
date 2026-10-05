@@ -64,6 +64,8 @@ class LicenseAllowListTest {
                 PomLicense("ISC License", "") to "ISC",
                 PomLicense("zlib License", "") to "Zlib",
                 PomLicense("Eclipse Public License - v 1.0", "") to "EPL-1.0",
+                PomLicense("Eclipse Public License v2.0", "") to "EPL-2.0",
+                PomLicense("Apache License v2", "") to "Apache-2.0",
                 PomLicense("BSD License", "") to null,
                 PomLicense("The Apache Software License, Version 1.1", "") to null,
                 PomLicense("GPL2 w/ CPE", "") to null,
