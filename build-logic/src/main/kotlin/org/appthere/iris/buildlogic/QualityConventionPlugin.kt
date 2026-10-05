@@ -10,14 +10,15 @@ import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
 
 /**
- * Formatting (Spotless with ktlint), static analysis (detekt with the Iris limits), file size limits
- * and coverage (Kover), all wired into `check`.
+ * Formatting (Spotless with ktlint), static analysis (detekt with the Iris limits), file size limits,
+ * the dependency license check and coverage (Kover), all wired into `check`.
  */
 class QualityConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         applySpotless(target)
         applyDetekt(target)
         applySizeLimits(target)
+        applyLicenseCheck(target)
         target.pluginManager.apply("org.jetbrains.kotlinx.kover")
     }
 
@@ -70,6 +71,22 @@ class QualityConventionPlugin : Plugin<Project> {
             }
         target.pluginManager.withPlugin("lifecycle-base") {
             target.tasks.named("check") { dependsOn(sizeLimits) }
+        }
+    }
+
+    private fun applyLicenseCheck(target: Project) {
+        // Resolved once, when the task graph is built (and stored in the configuration cache).
+        val facts = lazy { collectLicenseFacts(target) }
+        val licenseCheck =
+            target.tasks.register<LicenseCheckTask>("licenseCheck") {
+                group = "verification"
+                description = "Checks the licenses of shipped and test dependencies against the D-020 allow-list."
+                componentScopes.set(target.provider { facts.value.scopes })
+                componentLicenses.set(target.provider { facts.value.licenses })
+                report.set(target.layout.buildDirectory.file("reports/licenses/dependencies.txt"))
+            }
+        target.pluginManager.withPlugin("lifecycle-base") {
+            target.tasks.named("check") { dependsOn(licenseCheck) }
         }
     }
 
