@@ -14,6 +14,10 @@ gradlePlugin {
             id = "iris.kmp.library"
             implementationClass = "org.appthere.iris.buildlogic.KmpLibraryConventionPlugin"
         }
+        register("quality") {
+            id = "iris.quality"
+            implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"
+        }
     }
 }
 
@@ -23,6 +27,9 @@ configurations[functionalTest.runtimeOnlyConfigurationName].extendsFrom(configur
 dependencies {
     implementation(libs.gradlePlugin.kotlin)
     implementation(libs.gradlePlugin.android)
+    implementation(libs.gradlePlugin.detekt)
+    implementation(libs.gradlePlugin.spotless)
+    implementation(libs.gradlePlugin.kover)
 
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -16,6 +16,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.pluginManager.apply("org.jetbrains.kotlin.multiplatform")
         target.pluginManager.apply("com.android.kotlin.multiplatform.library")
+        target.pluginManager.apply(QualityConventionPlugin::class.java)
         val catalog = target.extensions.getByType<VersionCatalogsExtension>().named("libs")
         target.extensions.configure<KotlinMultiplatformExtension> {
             explicitApi()
