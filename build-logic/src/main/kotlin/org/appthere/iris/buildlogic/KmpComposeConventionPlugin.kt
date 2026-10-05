@@ -2,7 +2,9 @@ package org.appthere.iris.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /**
@@ -29,5 +31,7 @@ class KmpComposeConventionPlugin : Plugin<Project> {
                 implementation(desktopRuntime)
             }
         }
+        // Skia's native library calls restricted JDK methods; JDK 24+ warns and will later block them otherwise.
+        target.tasks.withType<Test>().configureEach { jvmArgs("--enable-native-access=ALL-UNNAMED") }
     }
 }
