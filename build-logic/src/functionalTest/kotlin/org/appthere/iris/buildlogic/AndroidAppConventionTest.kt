@@ -1,10 +1,12 @@
 package org.appthere.iris.buildlogic
 
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AndroidAppConventionTest {
@@ -70,6 +72,20 @@ class AndroidAppConventionTest {
         assertContains(badging, "targetSdkVersion:'36'")
         val screen = project.moduleDir.resolve("build").walk().first { it.name == "ScreenKt.class" }
         assertTrue(COMPOSER in screen.readBytes().decodeToString(), "$screen was not compose-compiled")
+    }
+
+    @Test
+    fun `android app compiles against an sdk new enough for compose multiplatform`() {
+        val project =
+            FixtureProject
+                .androidApp(dir)
+                .withFile("src/main/AndroidManifest.xml", "<manifest />")
+                .withBuildScript("dependencies { implementation(libs.compose.ui) }")
+        val task = ":${FixtureProject.MODULE}:checkDebugAarMetadata"
+
+        val result = project.runner(task).build()
+
+        assertEquals(TaskOutcome.SUCCESS, result.task(task)?.outcome)
     }
 
     private fun aapt2Badging(apk: File): String {

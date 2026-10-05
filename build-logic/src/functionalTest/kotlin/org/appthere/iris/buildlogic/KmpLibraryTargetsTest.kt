@@ -43,6 +43,6 @@ class KmpLibraryTargetsTest {
 
         val result = project.runner(":${FixtureProject.MODULE}:printAndroid").build()
 
-        assertContains(result.output, "ANDROID=org.appthere.iris.fixture,28,36")
+        assertContains(result.output, "ANDROID=org.appthere.iris.fixture,28,37")
     }
 }
