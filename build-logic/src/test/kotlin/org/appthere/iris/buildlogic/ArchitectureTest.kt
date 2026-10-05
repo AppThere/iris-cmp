@@ -64,6 +64,17 @@ class ArchitectureTest {
     }
 
     @Test
+    fun `iris-pixels may use cinterop for its TileBuffer actuals, outside commonMain only`() {
+        val native = listOf(SourceImport("src/nativeMain/kotlin/TileBuffer.kt", 3, "kotlinx.cinterop.nativeHeap"))
+        val common = listOf(SourceImport("src/commonMain/kotlin/Tiles.kt", 3, "kotlinx.cinterop.CPointer"))
+        val otherModule = listOf(SourceImport("src/iosMain/kotlin/X.kt", 1, "kotlinx.cinterop.CPointer"))
+
+        assertEquals(emptyList(), findArchitectureViolations(listOf(ModuleFacts("iris-pixels", imports = native))))
+        assertEquals(1, findArchitectureViolations(listOf(ModuleFacts("iris-pixels", imports = common))).size)
+        assertEquals(1, findArchitectureViolations(listOf(ModuleFacts("iris-core", imports = otherModule))).size)
+    }
+
+    @Test
     fun `iris-testing is allowed in test scope only`() {
         val inMain = findArchitectureViolations(listOf(ModuleFacts("iris-model", mainDependencies = setOf("iris-testing"))))
         val inApp = findArchitectureViolations(listOf(appFacts("app-android", setOf("iris-testing"))))
