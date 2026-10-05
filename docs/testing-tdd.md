@@ -48,7 +48,10 @@ Rules:
 ## 4. Golden image tests
 
 - The harness renders a scene to an `Rgba32F` tile set, compares to a golden EXR in `testdata/golden/<module>/<name>.exr` with a metric and tolerance declared in the test (`maxChannelDelta`, plus `maxMeanDelta`), and on failure writes `actual`, `expected` and a diff image to `build/golden-failures/`.
-- Goldens are updated only by running `./gradlew goldenUpdate -Pname=...`, which creates the change; `./gradlew goldenReview` lists pending changes. A human (Kevin) reviews golden changes. Claude Code never regenerates goldens to make a failing test pass without stating what changed visually and why.
+- Goldens are updated only by running `./gradlew goldenUpdate -Pname=...`, which creates the change; `./gradlew goldenReview` lists pending changes. A human (Kevin) reviews golden changes.
+  - When a golden test's output differs from its golden, or no golden exists yet, the harness writes that output to `<module>/build/golden-candidates/<name>.<ext>`.
+  - `goldenUpdate -Pname=<name>` (or `<module>/<name>`; `*` matches anything) copies matching candidates to `testdata/golden-pending/<module>/`. It never writes `testdata/golden/`.
+  - `goldenReview` lists each pending file as `add`, `change` or `same` against `testdata/golden/`. The pending area is committed, so the review can happen in a diff or PR; accepting a change means moving the file into `testdata/golden/`. Claude Code never regenerates goldens to make a failing test pass without stating what changed visually and why.
 - Scenes are tiny (64 to 512 px) and seeded. Every blend mode, every filter, every brush dynamics mapping and every vector feature has a scene.
 - CPU goldens are bit-exact within the stated tolerance on all targets. GPU parity uses a looser, per-node tolerance defined next to the node.
 
