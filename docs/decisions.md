@@ -27,6 +27,7 @@ Append new entries at the bottom. Each entry: id, date, status (`accepted`, `pro
 | D-021 | 2026-10-04 | accepted | Experimental Kotlin stdlib APIs (for example `kotlin.uuid.Uuid`) may be used if each opt-in sits at a single wrapper site with a comment | Avoids a third-party UUID dependency; keeps the experimental surface in one place |
 | D-022 | 2026-10-04 | accepted | Gate 1 accepts a documented partial result for spikes S3 and S9 when pen hardware is not available; completion carries into Phase 3 and is tracked in `STATUS.md` | Stylus hardware may not be available during Phase 0; Phase 3 (painting) is where adapters are built |
 | D-023 | 2026-10-04 | accepted | Static analysis uses detekt 2.0.0-alpha.6, pinned; `DetektLimitsFixtureTest` guards rule behavior on upgrade. Revisit when detekt 2.0.0 is stable | The stable detekt 1.23.8 does not support Kotlin 2.4 or Gradle 9; 2.0 alphas are built against our stack |
+| D-024 | 2026-10-04 | accepted | Minimum iOS (and iPadOS) version is 14.0 (Kevin). Pinned as `ios-minVersion` in `libs.versions.toml`; every Kotlin/Native iOS binary gets `-Xoverride-konan-properties=minVersion.ios=14.0` because the Kotlin/Native 2.4.20 default is 15.0. Completes the iOS part of D-004 | Compose Multiplatform 1.12.1 supports iOS 14; the override is documented by Kotlin (native-target-support). Linking and the resulting Mach-O minimum need macOS to verify |
 
 ## Provisional items and placeholders
 
