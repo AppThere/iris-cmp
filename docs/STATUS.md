@@ -23,11 +23,10 @@ Phase 0: Foundations and spikes (in progress)
 
 ## Next
 1. A2, remaining: `iris.app.ios` (test first).
-2. Kevin: decide whether to set `kotlin.native.ignoreDisabledTargets=true` (see Notes).
 
 ## Notes
 - First Kotlin/Native use downloads the 2.4.20 distribution into `~/.konan` (~300 MB; 21 min on this connection). CI (A8) should cache `~/.konan`.
-- On a non-Mac host every KMP module prints the configuration warning "Native task 'iosSimulatorArm64Test' is disabled". `kotlin.native.ignoreDisabledTargets=true` in `gradle.properties` silences it. Not set yet: waiting for Kevin.
+- On a non-Mac host every KMP module prints the configuration warning "Native task 'iosSimulatorArm64Test' is disabled". Silenced with `kotlin.native.ignoreDisabledTargets=true` in the root `gradle.properties` (Kevin, 2026-10-04). Fixture builds keep the warning, which `IosOnLinuxTest` checks.
 - No Android NDK on the dev machine, so AGP packages Compose's `libandroidx.graphics.path.so` unstripped (build message "Unable to strip the following libraries"). Harmless for debug; decide on installing an NDK (or pinning `ndkVersion`) before release builds.
 - services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
