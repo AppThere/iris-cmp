@@ -29,7 +29,7 @@ Phase 0: Foundations and spikes (in progress)
 - A7 done: root plugin `iris.golden` with `goldenUpdate -Pname=<pattern>` (candidates from `<module>/build/golden-candidates/` to `testdata/golden-pending/<module>/`) and `goldenReview` (`add`/`change`/`same` against `testdata/golden/`). Byte-level, so format-agnostic. Workflow documented in `docs/testing-tdd.md` section 4; the A10 harness must write candidates there.
 
 ## Next
-1. A8: GitHub Actions (Linux `check`; Windows and macOS JVM tests; Android emulator; iOS simulator on macOS).
+1. A8: workflow written (`.github/workflows/ci.yml`), not yet run: needs a push to GitHub. Its exit test is a green run.
 2. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
 3. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
 4. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
@@ -41,6 +41,12 @@ Phase 0: Foundations and spikes (in progress)
 - No Android NDK on the dev machine, so AGP packages Compose's `libandroidx.graphics.path.so` unstripped (build message "Unable to strip the following libraries"). Harmless for debug; decide on installing an NDK (or pinning `ndkVersion`) before release builds.
 - services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
+
+## Not covered by CI
+- Real pens on any platform (S3, S9) and the Wayland tablet protocol: manual checks in `docs/hardware-matrix.md`.
+- GPU parity (`iris-render-skia`): hosted runners have no usable GPU; nightly on a machine with a GPU, later.
+- Android: the emulator jobs run `connectedCheck`, but no module has device tests yet (the KMP libraries do not enable them).
+- iOS: simulator tests only; nothing runs on a physical iPhone or iPad.
 
 ## Unverified (could not be tested on the available machine)
 - detekt rules that need type resolution do not run on iOS-only code (`iosMain`, `appleMain`): detekt 2.0.0-alpha.6 has no type-resolving task for Kotlin/Native compilations. Plain `detekt` still covers those files.

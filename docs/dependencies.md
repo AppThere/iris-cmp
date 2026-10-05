@@ -17,6 +17,20 @@ One row per dependency. Versions live in `gradle/libs.versions.toml`.
 | `io.kotest:kotest-property` | 6.2.5 | Apache-2.0 | tests only | Property tests; runs under `kotlin.test` without the Kotest engine. Has JVM and iOS artifacts. Android host tests use the JVM artifact. Transitive: rgxgen 2.0, java-diff-utils 4.16, opentest4j 1.3.0 (all Apache-2.0) | 2026-10-04 |
 | JUnit Platform (Jupiter, launcher) | via `kotlin-test-junit5` / JUnit BOM | EPL-2.0 | tests only (JVM, `build-logic`) | Test runner behind `kotlin-test` on the JVM; allowed in test scope by D-020 | 2026-10-04 |
 
+## CI only (GitHub Actions, not shipped)
+
+Pinned to commit SHAs in `.github/workflows/ci.yml`.
+
+| Action | Version | License | Checked |
+| --- | --- | --- | --- |
+| `actions/checkout` | v7.0.1 (`3d3c42e5`) | MIT | 2026-10-05 |
+| `actions/setup-java` | v6.0.1 (`de7274f0`) | MIT | 2026-10-05 |
+| `actions/cache` | v6.1.0 (`55cc8345`) | MIT | 2026-10-05 |
+| `gradle/actions/setup-gradle` | v6.4.0 (`3f5f9ada`) | MIT | 2026-10-05 |
+| `reactivecircus/android-emulator-runner` | v2.38.0 (`a421e438`) | Apache-2.0 | 2026-10-05 |
+
+Runner images: `ubuntu-24.04` (Android SDK with `android-37.0`), `windows-2025`, `macos-26` (Xcode 26.4.1 selected; the image default is 26.6).
+
 Sources for all rows: Maven Central and Google Maven metadata (latest stable), POM license fields, the Kotlin Gradle plugin compatibility table, the AGP release notes, the Gradle compatibility matrix and the detekt compatibility table. Approved by Kevin 2026-10-04.
 
 Deferred until a task needs them: `kotlinx-collections-immutable` 0.5.2 (Apache-2.0, decided by S8), `kotlinx-benchmark` 0.5.0 (Apache-2.0, first benchmark), foojay toolchain resolver (not needed: the local JDK 25 runs the build and CI uses `setup-java`).
