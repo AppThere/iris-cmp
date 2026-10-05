@@ -8,7 +8,7 @@ Phase 0: Foundations and spikes (in progress)
 ## Done
 - Product spec, architecture, file format, standards, TDD guide, phase plan and decision log written (design only; no code yet).
 - `docs/phases/phase-0.md` approved 2026-10-04; its open questions resolved as D-019 to D-022.
-- Git repository initialized (branch `main`), pushed to public GitHub repo `AppThere/iris-cmp`; commits use the GitHub noreply email (repo-local git config).
+- Git repository initialized (branch `main`), pushed to public GitHub repo `AppThere/iris-cmp` (pushed through A8 on 2026-10-05); commits use the GitHub noreply email (repo-local git config).
 - Available hardware recorded in `docs/hardware-matrix.md`: Galaxy Tab S10 Lite with S Pen, MacBook Air M1, Linux/Wayland dev machine.
 
 - A0 done: `LICENSE` (canonical Apache-2.0 text), `NOTICE`, `.gitignore`, `.gitattributes`, `.editorconfig`, Gradle 9.7.0 wrapper with distribution checksum, `settings.gradle.kts` including `build-logic`. `./gradlew help` passes on JDK 25.
@@ -27,9 +27,10 @@ Phase 0: Foundations and spikes (in progress)
 - A5 done: `verifySizeLimits` per module (400 lines, 600 in test source sets; `testdata/` and `generated/` exempt), in `check`; `./gradlew verifySizeLimits` runs it everywhere. detekt config ships in `build-logic` (`detekt.yml`): function length 50, complexity 12, nesting 4, parameters 7, public functions per class 20. `DetektLimitsFixtureTest` pins each limit at its boundary. `check` also runs the per-compilation detekt tasks (`detektMainJvm`, `detektTestJvm`, `detektMainAndroid`, `detektHostTestAndroid`; `detektMain`/`detektTest` in JVM apps), because plain `detekt` has no type resolution and skips rules such as `LongParameterList`.
 - A6 done: `licenseCheck` per module, in `check` (`./gradlew licenseCheck` runs all). Shipped scope: `runtimeClasspath`, `<target>RuntimeClasspath`, `releaseRuntimeClasspath` and `<target>CompileKlibraries`; test scope: their test counterparts. Not checked: `debug*` and the desktop hot-reload configurations (`dev*`, `composeHotReload*`), which are never distributed. POM licenses follow parent POMs and map to SPDX ids; a bare "BSD License" is treated as unrecognized. First real run: 234 components, all shipped ones Apache-2.0; test-only JUnit 4 (EPL-1.0) and Hamcrest (New BSD). Reports in `<module>/build/reports/licenses/dependencies.txt`.
 - A7 done: root plugin `iris.golden` with `goldenUpdate -Pname=<pattern>` (candidates from `<module>/build/golden-candidates/` to `testdata/golden-pending/<module>/`) and `goldenReview` (`add`/`change`/`same` against `testdata/golden/`). Byte-level, so format-agnostic. Workflow documented in `docs/testing-tdd.md` section 4; the A10 harness must write candidates there.
+- A8 done: `.github/workflows/ci.yml` (actions pinned to SHAs) is green on GitHub (run 37267791752, 2026-10-05): Linux `check`; JVM tests and build-logic unit tests on Windows and macOS; Android emulator API 28 and 35 (`connectedCheck`); iOS simulator tests and `IrisApp` framework links on macOS 26 with Xcode 26.4.1. The first run (37267256192) failed only in the iOS minos step, because `app-ios` has no sources to link yet; that step now waits for A11. Cold runs take 3 to 5 min per job.
 
 ## Next
-1. A8: workflow written (`.github/workflows/ci.yml`), not yet run: needs a push to GitHub. Its exit test is a green run.
+1. A9: `iris-core`, one commit pair per item: ids, geometry (`Point`, `Rect`, `IntRect`, `Matrix`), `IrisResult`/`IrisError`, `Clock`, `DispatcherProvider`, `Logger`, `FractionalIndex`.
 2. Kevin: should accepting a golden be a task (`goldenAccept -Pname=...` moving pending files into `testdata/golden/`), or stay a manual move?
 3. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
 4. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
