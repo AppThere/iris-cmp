@@ -50,7 +50,7 @@ Phase 0: Foundations and spikes (in progress)
 
 ## Unverified (could not be tested on the available machine)
 - detekt rules that need type resolution do not run on iOS-only code (`iosMain`, `appleMain`): detekt 2.0.0-alpha.6 has no type-resolving task for Kotlin/Native compilations. Plain `detekt` still covers those files.
-- iOS linking, frameworks (`iris.app.ios` framework link tasks are SKIPPED here) and running iOS tests: compile-only on Linux. Also unverified: that linked binaries really carry `minos 14.0` (check with `vtool -show-build` on a Mac), and that the Xcode project's deployment target matches (A11). Needs macOS CI or Kevin's Mac.
+- iOS linking, frameworks and running iOS tests: compile-only on Linux; CI's macOS job runs them. Still unverified: that linked binaries carry `minos 14.0`. CI checks it with `otool` (`.github/scripts/check-minos.sh`) once `app-ios` has sources (A11); also that the Xcode project's deployment target matches (A11). Needs macOS CI or Kevin's Mac.
 - iOS and macOS: no macOS on the development machine. Evidence comes from Kevin's MacBook Air M1 or macOS CI.
 - No iPad available: iPadOS Apple Pencil input (S9) is unverified.
 - No pen on Windows, macOS or Linux: those parts of S3 and S9 are partial (D-022).

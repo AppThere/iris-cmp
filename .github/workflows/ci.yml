@@ -103,7 +103,12 @@ jobs:
           path: ~/.konan
           key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
       - run: ./gradlew iosSimulatorArm64Test :app-ios:linkDebugFrameworkIosSimulatorArm64 :app-ios:linkDebugFrameworkIosArm64 --continue
+      # app-ios has no sources until A11, so no framework is linked yet; say so instead of passing silently.
+      - name: Frameworks target iOS 14 (not yet checkable)
+        if: hashFiles('app-ios/src/**/*.kt') == ''
+        run: echo "::notice title=minos check skipped::app-ios has no Kotlin sources yet (A11), so no IrisApp framework is linked."
       - name: Frameworks target iOS 14 (D-024)
+        if: hashFiles('app-ios/src/**/*.kt') != ''
         run: |
           .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosSimulatorArm64/debugFramework/IrisApp.framework/IrisApp
           .github/scripts/check-minos.sh 14.0 app-ios/build/bin/iosArm64/debugFramework/IrisApp.framework/IrisApp
