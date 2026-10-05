@@ -18,6 +18,10 @@ gradlePlugin {
             id = "iris.kmp.compose"
             implementationClass = "org.appthere.iris.buildlogic.KmpComposeConventionPlugin"
         }
+        register("appDesktop") {
+            id = "iris.app.desktop"
+            implementationClass = "org.appthere.iris.buildlogic.DesktopAppConventionPlugin"
+        }
         register("quality") {
             id = "iris.quality"
             implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"
@@ -32,6 +36,7 @@ dependencies {
     implementation(libs.gradlePlugin.kotlin)
     implementation(libs.gradlePlugin.android)
     implementation(libs.gradlePlugin.composeCompiler)
+    implementation(libs.gradlePlugin.compose)
     implementation(libs.gradlePlugin.detekt)
     implementation(libs.gradlePlugin.spotless)
     implementation(libs.gradlePlugin.kover)
