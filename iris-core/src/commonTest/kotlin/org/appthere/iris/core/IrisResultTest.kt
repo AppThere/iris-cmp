@@ -25,6 +25,11 @@ class IrisResultTest {
             else -> IrisResult.Failure(ParseError.BadDigit(text.indexOfFirst { !it.isDigit() }))
         }
 
+    private fun half(value: Int): IrisResult<Int> =
+        if (value % 2 == 0) IrisResult.Success(value / 2) else IrisResult.Failure(ParseError.BadDigit(0))
+
+    private fun describe(result: IrisResult<Int>): String = result.fold({ "value $it" }, { "error: ${it.message}" })
+
     @Test
     fun mapTransformsSuccessAndKeepsFailure() {
         assertEquals(IrisResult.Success(84), parse("42").map { it * 2 })
@@ -33,19 +38,9 @@ class IrisResultTest {
 
     @Test
     fun flatMapChainsAndStopsAtTheFirstFailure() {
-        val half: (Int) -> IrisResult<Int> = {
-            if (it % 2 ==
-                0
-            ) {
-                IrisResult.Success(it / 2)
-            } else {
-                IrisResult.Failure(ParseError.BadDigit(0))
-            }
-        }
-
-        assertEquals(IrisResult.Success(21), parse("42").flatMap(half))
-        assertEquals(IrisResult.Failure(ParseError.BadDigit(0)), parse("7").flatMap(half))
-        assertEquals(IrisResult.Failure(ParseError.BadDigit(1)), parse("4x").flatMap(half))
+        assertEquals(IrisResult.Success(21), parse("42").flatMap(::half))
+        assertEquals(IrisResult.Failure(ParseError.BadDigit(0)), parse("7").flatMap(::half))
+        assertEquals(IrisResult.Failure(ParseError.BadDigit(1)), parse("4x").flatMap(::half))
     }
 
     @Test
@@ -59,10 +54,6 @@ class IrisResultTest {
 
     @Test
     fun foldHandlesBothCases() {
-        val describe: (
-            IrisResult<Int>,
-        ) -> String = { result -> result.fold({ "value $it" }, { "error: ${it.message}" }) }
-
         assertEquals("value 42", describe(parse("42")))
         assertEquals("error: bad digit at 2", describe(parse("12a")))
     }
