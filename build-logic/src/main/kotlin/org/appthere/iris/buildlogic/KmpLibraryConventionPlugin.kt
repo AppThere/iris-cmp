@@ -24,6 +24,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             }
             iosArm64()
             iosSimulatorArm64()
+            targetIosMinimum(catalog.version("ios-minVersion"))
             targets.withType<KotlinMultiplatformAndroidLibraryTarget>().configureEach {
                 namespace = modulePackage(target.name)
                 compileSdk = catalog.intVersion("android-compileSdk")
