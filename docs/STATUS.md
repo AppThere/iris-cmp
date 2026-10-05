@@ -12,11 +12,14 @@ Phase 0: Foundations and spikes (in progress)
 - Available hardware recorded in `docs/hardware-matrix.md`: Galaxy Tab S10 Lite with S Pen, MacBook Air M1, Linux/Wayland dev machine.
 
 - A0 done: `LICENSE` (canonical Apache-2.0 text), `NOTICE`, `.gitignore`, `.gitattributes`, `.editorconfig`, Gradle 9.7.0 wrapper with distribution checksum, `settings.gradle.kts` including `build-logic`. `./gradlew help` passes on JDK 25.
-- A1 research done: proposed versions and licenses in `docs/dependencies.md` (checked 2026-10-04).
+- A1 done: versions approved and pinned in `gradle/libs.versions.toml`, licenses in `docs/dependencies.md` (checked 2026-10-04), D-023 (detekt 2.0 alpha).
+- A2 in progress. `build-logic` has a TestKit `functionalTest` suite run by root `./gradlew check` (10 tests, green).
+  - `iris.kmp.library`: JVM, Android (min SDK 28), `iosArm64`, `iosSimulatorArm64`, `explicitApi()`, JVM 17 bytecode, warnings as errors, kotlin-test in commonTest.
+  - `iris.quality` (applied by `iris.kmp.library`): Spotless with ktlint, detekt over all of `src/`, Kover; all three in `check`.
 
 ## Next
-1. Kevin approves the A1 list in `docs/dependencies.md`, including the detekt 2.0.0-alpha.6 choice.
-2. Then: pin versions in `gradle/libs.versions.toml`, start A2 (convention plugins, `ExplicitApiConventionTest` first).
+1. A2, remaining: `iris.kmp.compose`, `iris.app.desktop`, `iris.app.android`, `iris.app.ios` (test first for each).
+2. A2: check whether iOS klibs cross-compile on Linux (phase-0 §4 item 5). So far the iOS targets are only declared; nothing has compiled them.
 
 ## Notes
 - services.gradle.org downloads time out from the dev machine (Gradle wrapper has a 10 s read timeout). Workaround used: download with `curl --retry`, check the SHA-256, place the zip in `~/.gradle/wrapper/dists/`.
