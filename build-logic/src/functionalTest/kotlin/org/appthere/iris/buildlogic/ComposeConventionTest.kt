@@ -5,6 +5,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ComposeConventionTest {
@@ -54,6 +55,7 @@ class ComposeConventionTest {
                     import androidx.compose.ui.test.v2.runComposeUiTest
                     import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
                     class HelloTest {
                         @OptIn(ExperimentalTestApi::class)
@@ -68,6 +70,8 @@ import kotlin.test.assertEquals
 
         assertEquals(TaskOutcome.SUCCESS, result.task(jvmTest)?.outcome)
         assertTrue(project.moduleDir.resolve("build/test-results/jvmTest/TEST-HelloTest.xml").exists())
+        // Skia calls restricted JDK methods; the test JVM must allow native access instead of warning.
+        assertFalse("Restricted methods will be blocked" in result.output, "native access warning in:\n${result.output}")
     }
 
     private companion object {
