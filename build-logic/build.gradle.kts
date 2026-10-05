@@ -26,6 +26,10 @@ gradlePlugin {
             id = "iris.app.android"
             implementationClass = "org.appthere.iris.buildlogic.AndroidAppConventionPlugin"
         }
+        register("appIos") {
+            id = "iris.app.ios"
+            implementationClass = "org.appthere.iris.buildlogic.IosAppConventionPlugin"
+        }
         register("quality") {
             id = "iris.quality"
             implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"
