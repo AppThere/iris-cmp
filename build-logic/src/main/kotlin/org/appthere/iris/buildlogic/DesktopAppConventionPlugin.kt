@@ -26,6 +26,8 @@ class DesktopAppConventionPlugin : Plugin<Project> {
         target.extensions.getByType<ComposeExtension>().extensions.configure<DesktopExtension> {
             application {
                 mainClass = modulePackage(target.name) + ".MainKt"
+                // Skia's native library calls restricted JDK methods; JDK 24+ warns and will later block them otherwise.
+                jvmArgs += "--enable-native-access=ALL-UNNAMED"
             }
         }
     }
