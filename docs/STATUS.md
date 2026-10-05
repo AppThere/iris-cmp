@@ -24,9 +24,10 @@ Phase 0: Foundations and spikes (in progress)
   - `iris.app.ios`: Kotlin Multiplatform with only `iosArm64` and `iosSimulatorArm64`, each with a static `IrisApp` framework (debug and release) for Xcode's `embedAndSignAppleFrameworkForXcode`; Compose compiler, runtime and UI. Minimum iOS 14.0 (D-024) on every iOS binary, in libraries and the app. The Xcode project comes with A11.
 - A3 done: 23 module skeletons (all of `architecture.md` §1) in `settings.gradle.kts`. Each has a build script with its convention plugin and only the allowed project dependencies, and a README (package, plugin, dependency rule). No sources yet. `iris-testing` declares no dependencies until A10; the apps depend on `iris-ui`, `iris-editor`, `iris-render-skia` and the three platform modules. `./gradlew check` is green across all modules.
 - A4 done: `ArchitectureTest` (unit tests on the rule table and checker), `ArchitectureTableSyncTest` (rule table equals `architecture.md` §1), and `verifyArchitecture` from the root plugin `iris.architecture`, run by `check`. It checks declared project dependencies (main and test scope) and Kotlin imports. Engine modules and `iris-testing` may not import `android.`, `androidx.`, `java.awt.`, `javax.swing.`, `javafx.`, `platform.`, `org.jetbrains.skia.`, `org.jetbrains.skiko.`, `org.jetbrains.compose.` or `kotlinx.cinterop.`. `iris-testing` is allowed in test scope only. Checked against the real repo with a temporary violation in `iris-core`.
+- A5 done: `verifySizeLimits` per module (400 lines, 600 in test source sets; `testdata/` and `generated/` exempt), in `check`; `./gradlew verifySizeLimits` runs it everywhere. detekt config ships in `build-logic` (`detekt.yml`): function length 50, complexity 12, nesting 4, parameters 7, public functions per class 20. `DetektLimitsFixtureTest` pins each limit at its boundary. `check` also runs the per-compilation detekt tasks (`detektMainJvm`, `detektTestJvm`, `detektMainAndroid`, `detektHostTestAndroid`; `detektMain`/`detektTest` in JVM apps), because plain `detekt` has no type resolution and skips rules such as `LongParameterList`.
 
 ## Next
-1. A5: `verifySizeLimits` (file length) and detekt limits (function length, complexity, nesting), both in `check`.
+1. A6: `licenseCheck` (allow-list from D-020; `LicenseAllowListTest` on fixture POMs first).
 2. Kevin: `iris-ui` is "Compose only" in `architecture.md` §1, but §13 has `CanvasHost` embed native surfaces (Android `SurfaceView`, iOS Metal view) as an `expect`/`actual` composable. Imports in `iris-ui` are not checked until this is settled (S2 may decide where `CanvasHost` lives).
 3. S8: add the `iris-pixels` exemption for `TileBuffer` actuals (likely `kotlinx.cinterop.` and `platform.posix.` in `iosMain`) to the rule table, with a test.
 
@@ -39,6 +40,7 @@ Phase 0: Foundations and spikes (in progress)
 - Kevin's Mac needs Xcode 26.4 for Kotlin 2.4.20 iOS builds.
 
 ## Unverified (could not be tested on the available machine)
+- detekt rules that need type resolution do not run on iOS-only code (`iosMain`, `appleMain`): detekt 2.0.0-alpha.6 has no type-resolving task for Kotlin/Native compilations. Plain `detekt` still covers those files.
 - iOS linking, frameworks (`iris.app.ios` framework link tasks are SKIPPED here) and running iOS tests: compile-only on Linux. Also unverified: that linked binaries really carry `minos 14.0` (check with `vtool -show-build` on a Mac), and that the Xcode project's deployment target matches (A11). Needs macOS CI or Kevin's Mac.
 - iOS and macOS: no macOS on the development machine. Evidence comes from Kevin's MacBook Air M1 or macOS CI.
 - No iPad available: iPadOS Apple Pencil input (S9) is unverified.

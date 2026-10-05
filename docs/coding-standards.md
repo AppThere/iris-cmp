@@ -21,7 +21,7 @@ Applies to all Kotlin in this repository. Tooling enforces what it can; reviews 
 | Parameters per function | 7 (use a parameter object beyond that) |
 | Public members per class | 20 |
 
-`verifySizeLimits` reports every offender. Generated code and test fixtures in `testdata/` are exempt. Do not add suppressions; split the code. A suppression requires a decision-log entry.
+`verifySizeLimits` reports every offender (file length); detekt enforces the other limits (`build-logic/src/main/resources/org/appthere/iris/buildlogic/detekt.yml`). detekt can only count functions, so the public-member limit covers public functions, not properties. Generated code and test fixtures in `testdata/` are exempt. Do not add suppressions; split the code. A suppression requires a decision-log entry.
 
 ## 3. Module boundaries and visibility
 
