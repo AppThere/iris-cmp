@@ -2,7 +2,6 @@ package org.appthere.iris.testing
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.appthere.iris.input.PenAction
 import org.appthere.iris.input.PenAxes
@@ -43,9 +42,12 @@ class ScriptedStylusSourceTest {
         runTest {
             val source = ScriptedStylusSource(capabilities, stroke)
             val received = mutableListOf<RawPenEvent>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { source.events.toList(received) }
+            backgroundScope.launch { source.events.toList(received) }
+
+            testScheduler.runCurrent()
 
             source.playAll()
+            testScheduler.runCurrent()
 
             assertEquals(stroke, received)
         }
@@ -55,10 +57,13 @@ class ScriptedStylusSourceTest {
         runTest {
             val source = ScriptedStylusSource(capabilities, stroke)
             val received = mutableListOf<RawPenEvent>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { source.events.toList(received) }
+            backgroundScope.launch { source.events.toList(received) }
+
+            testScheduler.runCurrent()
 
             source.playNext()
             source.playNext(2)
+            testScheduler.runCurrent()
 
             assertEquals(stroke.take(3), received)
             assertEquals(1, source.remaining)
@@ -71,10 +76,13 @@ class ScriptedStylusSourceTest {
             val source = ScriptedStylusSource(capabilities, stroke)
             val first = mutableListOf<RawPenEvent>()
             val second = mutableListOf<RawPenEvent>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { source.events.toList(first) }
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { source.events.toList(second) }
+            backgroundScope.launch { source.events.toList(first) }
+            backgroundScope.launch { source.events.toList(second) }
+
+            testScheduler.runCurrent()
 
             source.playAll()
+            testScheduler.runCurrent()
 
             assertEquals(stroke, first)
             assertEquals(stroke, second)
