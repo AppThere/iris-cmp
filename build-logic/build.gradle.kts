@@ -62,6 +62,11 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+tasks.test {
+    // ArchitectureTableSyncTest compares the rule table with the document it is copied from.
+    systemProperty("iris.architectureDoc", layout.projectDirectory.file("../docs/architecture.md").asFile.absolutePath)
+}
+
 val functionalTestTask =
     tasks.register<Test>("functionalTest") {
         description = "Runs TestKit tests against fixture projects."
