@@ -22,6 +22,10 @@ gradlePlugin {
             id = "iris.app.desktop"
             implementationClass = "org.appthere.iris.buildlogic.DesktopAppConventionPlugin"
         }
+        register("appAndroid") {
+            id = "iris.app.android"
+            implementationClass = "org.appthere.iris.buildlogic.AndroidAppConventionPlugin"
+        }
         register("quality") {
             id = "iris.quality"
             implementationClass = "org.appthere.iris.buildlogic.QualityConventionPlugin"

@@ -16,6 +16,21 @@ class AndroidAppConventionTest {
         val project =
             FixtureProject
                 .androidApp(dir)
+                .withFile(
+                    "src/main/AndroidManifest.xml",
+                    """
+                    <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+                        <application android:label="Fixture">
+                            <activity android:name=".MainActivity" android:exported="true">
+                                <intent-filter>
+                                    <action android:name="android.intent.action.MAIN" />
+                                    <category android:name="android.intent.category.LAUNCHER" />
+                                </intent-filter>
+                            </activity>
+                        </application>
+                    </manifest>
+                    """,
+                )
                 .withSource(
                     "main",
                     "org/appthere/iris/fixture/Screen.kt",

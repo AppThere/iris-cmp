@@ -29,6 +29,17 @@ internal class FixtureProject(
         return this
     }
 
+    /** Writes [content] to [path], relative to the fixture module. */
+    fun withFile(
+        path: String,
+        content: String,
+    ): FixtureProject {
+        val file = dir.resolve("$MODULE/$path")
+        file.parentFile.mkdirs()
+        file.writeText(content.trimIndent() + "\n")
+        return this
+    }
+
     /** Directory of the fixture module, for assertions on build outputs. */
     val moduleDir: File get() = dir.resolve(MODULE)
 
